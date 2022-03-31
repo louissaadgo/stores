@@ -27,7 +27,7 @@ func TestStoreSignup(t *testing.T) {
 		Email:       "email@test.com",
 		Password:    "password",
 	}
-	url := "http://127.0.0.1:4000/api/auth/store/signup"
+	url := "http://localhost:4000/api/auth/store/signup"
 	jsonData, err := json.Marshal(correctData)
 	if err != nil {
 		t.Errorf("Failed converting to json")
