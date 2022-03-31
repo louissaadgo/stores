@@ -6,9 +6,18 @@ import (
 	"net/http"
 	"stores/models"
 	"testing"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func TestStoreSignup(t *testing.T) {
+
+	go func() {
+		app := fiber.New()
+		app.Post("/api/auth/store/signup", StoreSignup)
+		app.Listen(":4000")
+	}()
+
 	correctData := models.StoreSignup{
 		Name:        "Store 1",
 		Address:     "Address 1",
