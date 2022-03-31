@@ -1,4 +1,4 @@
 run:
 	go run main/main.go
-test:
+controllers-test:
 	go test controllers/*.go
