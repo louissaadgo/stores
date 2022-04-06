@@ -45,6 +45,18 @@ CREATE TABLE merchants (
     updated_at  TIMESTAMP WITH TIME ZONE
 );
 
+CREATE TABLE coupons (
+    id varchar PRIMARY KEY,
+    value float,
+    type varchar,
+    max_usage int,
+    used int,
+    code varchar,
+    end_date TIMESTAMP WITH TIME ZONE,
+    created_at  TIMESTAMP WITH TIME ZONE,
+    updated_at  TIMESTAMP WITH TIME ZONE
+);
+
 CREATE TABLE stores (
     id varchar PRIMARY KEY,
     merchant_id varchar,
@@ -53,6 +65,7 @@ CREATE TABLE stores (
     phone varchar,
     location varchar,
     country varchar,
+    access_key varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (merchant_id) REFERENCES merchants(id)
@@ -158,17 +171,6 @@ CREATE TABLE orders (
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (coupon_id) REFERENCES coupons(id)
-);
-
-CREATE TABLE coupons (
-    id varchar PRIMARY KEY,
-    value float,
-    max_usage int,
-    used int,
-    code varchar,
-    end_date TIMESTAMP WITH TIME ZONE,
-    created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE favorites (
