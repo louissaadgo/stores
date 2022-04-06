@@ -2,20 +2,28 @@ package token
 
 import (
 	"fmt"
-	"os"
+	"stores/models"
 	"time"
 
-	"github.com/louissaadgo/quiqr/auth/src/models"
 	"github.com/o1egl/paseto"
 	"golang.org/x/crypto/chacha20poly1305"
 )
 
-func GeneratePasetoToken(payload interface{}) (string, error) {
+const (
+	key = "01234567890123456789012345678924"
+)
 
-	key := os.Getenv("PASETO_KEY")
+func GeneratePasetoToken(id, userID, userType string) (string, error) {
 
 	if len(key) != chacha20poly1305.KeySize {
 		return "", fmt.Errorf("key error")
+	}
+
+	payload := models.PasetoTokenPayload{
+		ID:       id,
+		UserID:   userID,
+		UserType: userType,
+		IssuedAt: time.Now(),
 	}
 
 	paseto := paseto.NewV2()
@@ -28,16 +36,10 @@ func VerifyPasetoToken(token string) (models.PasetoTokenPayload, bool) {
 
 	payload := models.PasetoTokenPayload{}
 
-	key := os.Getenv("PASETO_KEY")
-
 	paseto := paseto.NewV2()
 
 	err := paseto.Decrypt(token, []byte(key), &payload, nil)
 	if err != nil {
-		return payload, false
-	}
-
-	if !time.Now().Before(payload.ExpiresAt) {
 		return payload, false
 	}
 
