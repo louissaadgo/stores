@@ -4,6 +4,7 @@ CREATE TABLE users (
     password varchar,
     sign_type varchar,
     sign_id varchar,
+    status varchar,
     bday  TIMESTAMP WITH TIME ZONE,
     image varchar,
     country varchar,
@@ -39,6 +40,7 @@ CREATE TABLE admins (
 CREATE TABLE merchants (
     id varchar PRIMARY KEY,
     email varchar,
+    status varchar,
     password varchar,
     name varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
