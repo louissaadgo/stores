@@ -1,6 +1,7 @@
 CREATE TABLE users (
     id varchar PRIMARY KEY,
     phone varchar,
+    name varchar,
     password varchar,
     sign_type varchar,
     sign_id varchar,
