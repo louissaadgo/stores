@@ -13,6 +13,20 @@ CREATE TABLE users (
     updated_at  TIMESTAMP WITH TIME ZONE
 );
 
+CREATE TABLE addresses (
+    id varchar PRIMARY KEY,
+    user_id varchar,
+    name varchar,
+    region varchar,
+    city varchar,
+    address varchar,
+    longitude varchar,
+    latitude varchar,
+    created_at TIMESTAMP WITH TIME ZONE,
+    updated_at TIMESTAMP WITH TIME ZONE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 CREATE TABLE admins (
     id varchar PRIMARY KEY,
     name varchar,
@@ -22,17 +36,37 @@ CREATE TABLE admins (
     updated_at  TIMESTAMP WITH TIME ZONE
 );
 
-CREATE TABLE stores (
+CREATE TABLE merchants (
     id varchar PRIMARY KEY,
     email varchar,
-    name varchar,
     password varchar,
+    name varchar,
+    created_at  TIMESTAMP WITH TIME ZONE,
+    updated_at  TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE stores (
+    id varchar PRIMARY KEY,
+    merchant_id varchar,
+    name varchar,
     description varchar,
     phone varchar,
     location varchar,
     country varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE
+    updated_at  TIMESTAMP WITH TIME ZONE,
+    FOREIGN KEY (merchant_id) REFERENCES merchants(id)
+);
+
+CREATE TABLE links (
+    id varchar PRIMARY KEY,
+    store_id varchar,
+    name varchar,
+    url varchar,
+    logo varchar,
+    created_at TIMESTAMP WITH TIME ZONE,
+    updated_at TIMESTAMP WITH TIME ZONE,
+    FOREIGN KEY (store_id) REFERENCES stores(id)
 );
 
 CREATE TABLE categories (
@@ -67,13 +101,22 @@ CREATE TABLE attribute_values (
     FOREIGN KEY (attribute_id) REFERENCES attributes(id)
 );
 
+CREATE TABLE currencies (
+    id varchar PRIMARY KEY,
+    name varchar,
+    symbol varchar,
+    factor float
+);
+
 CREATE TABLE wallets (
     id varchar PRIMARY KEY,
     user_id varchar,
     amount float,
+    currency_id varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (currency_id) REFERENCES currencies(id)
 );
 
 CREATE TABLE transactions (
@@ -83,13 +126,6 @@ CREATE TABLE transactions (
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (wallet_id) REFERENCES wallets(id)
-);
-
-CREATE TABLE currencies (
-    id varchar PRIMARY KEY,
-    name varchar,
-    symbol varchar,
-    factor float
 );
 
 CREATE TABLE items (
@@ -106,6 +142,8 @@ CREATE TABLE items (
     subcategory_id varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
+    stock int,
+    status varchar,
     FOREIGN KEY (store_id) REFERENCES stores(id),
     FOREIGN KEY (category_id) REFERENCES categories(id),
     FOREIGN KEY (subcategory_id) REFERENCES subcategories(id)
@@ -144,14 +182,14 @@ CREATE TABLE favorites (
 CREATE TABLE reviews (
     id varchar PRIMARY KEY,
     user_id varchar,
-    item_id varchar,
+    store_id varchar,
     order_id varchar,
     rating int,
     content varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (item_id) REFERENCES items(id),
+    FOREIGN KEY (store_id) REFERENCES stores(id),
     FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
