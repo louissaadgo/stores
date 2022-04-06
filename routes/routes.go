@@ -9,4 +9,5 @@ import (
 func Initialize(app *fiber.App) {
 
 	app.Post("/api/auth/store/signup", controllers.StoreSignup)
+	app.Use()
 }
