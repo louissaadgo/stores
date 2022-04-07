@@ -84,4 +84,19 @@ func AdminSignin(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
+
+	cookie := fiber.Cookie{
+		Name:  "token",
+		Value: token,
+	}
+	c.Cookie(&cookie)
+
+	response := models.Response{
+		Type: models.TypeAuthResponse,
+		Data: views.Auth{
+			AuthToken: token,
+		},
+	}
+
+	return c.JSON(response)
 }

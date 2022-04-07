@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/gofiber/fiber/v2 v2.31.0
+	github.com/google/uuid v1.3.0
 	github.com/lib/pq v1.10.4
 	github.com/louissaadgo/go-checkif v0.2.0
 	github.com/o1egl/paseto v1.0.0
@@ -15,7 +16,6 @@ require (
 	github.com/aead/chacha20poly1305 v0.0.0-20170617001512-233f39982aeb // indirect
 	github.com/aead/poly1305 v0.0.0-20180717145839-3fee0db0b635 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
