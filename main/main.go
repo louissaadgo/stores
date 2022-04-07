@@ -8,10 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func init() {
-
-}
-
 func main() {
 	err, isValid := db.InitializeDB()
 	if !isValid {
