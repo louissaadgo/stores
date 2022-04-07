@@ -5,6 +5,11 @@ const (
 	TypeAuthResponse     = "auth"
 	TypeAdmin            = "admin"
 	TypeMerchant         = "merchant"
+	TypeUser             = "user"
+	SignTypeNative       = "native"
+	SignTypeParty        = "party"
 	MerchantStatusActive = "active"
 	MerchantStatusBanned = "banned"
+	UserStatusActive     = "active"
+	UserStatusBanned     = "banned"
 )

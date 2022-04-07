@@ -9,7 +9,6 @@ CREATE TABLE users (
     bday  TIMESTAMP WITH TIME ZONE,
     image varchar,
     country varchar,
-    location varchar,
     loyality_points int,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE
