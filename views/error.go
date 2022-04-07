@@ -1,5 +1,5 @@
 package views
 
 type Error struct {
-	Errors []string `json:"errors"`
+	Error string `json:"error"`
 }
