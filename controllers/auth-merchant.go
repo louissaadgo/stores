@@ -127,3 +127,94 @@ func MerchantSignup(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func MerchantSignin(c *fiber.Ctx) error {
+	merchant := models.Merchant{}
+	err := c.BodyParser(&merchant)
+
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if _, isValid := merchant.Validate(); !isValid {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	password := merchant.Password
+	query := db.DB.QueryRow(`SELECT id, password FROM merchants WHERE email = $1;`, merchant.Email)
+	err = query.Scan(&merchant.ID, &merchant.Password)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Credentials",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if isValid := ValidatePassword(password, merchant.Password); !isValid {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Credentials",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	tokenID := uuid.New().String()
+	if tokenID == "" {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	token, err := token.GeneratePasetoToken(tokenID, merchant.ID, models.TypeMerchant)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	cookie := fiber.Cookie{
+		Name:  "token",
+		Value: token,
+	}
+	c.Cookie(&cookie)
+
+	response := models.Response{
+		Type: models.TypeAuthResponse,
+		Data: views.Auth{
+			AuthToken: token,
+		},
+	}
+
+	return c.JSON(response)
+}
