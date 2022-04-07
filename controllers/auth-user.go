@@ -75,6 +75,15 @@ func UserSignup(c *fiber.Ctx) error {
 		user.SignID = ""
 	} else if user.SignType == models.SignTypeParty {
 		user.Password = ""
+	} else {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "invalid sign_type",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
 	}
 	user.Status = models.UserStatusActive
 	user.LoyalityPoints = 0
@@ -88,6 +97,120 @@ func UserSignup(c *fiber.Ctx) error {
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
 				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	tokenID := uuid.New().String()
+	if tokenID == "" {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	token, err := token.GeneratePasetoToken(tokenID, user.ID, models.TypeUser)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	cookie := fiber.Cookie{
+		Name:  "token",
+		Value: token,
+	}
+	c.Cookie(&cookie)
+
+	response := models.Response{
+		Type: models.TypeAuthResponse,
+		Data: views.Auth{
+			AuthToken: token,
+		},
+	}
+
+	return c.JSON(response)
+}
+
+func UserSignin(c *fiber.Ctx) error {
+	user := models.User{}
+	err := c.BodyParser(&user)
+
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if _, isValid := user.Validate(); !isValid {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	password := user.Password
+	signID := user.SignID
+	query := db.DB.QueryRow(`SELECT id, password, sign_id FROM users WHERE phone = $1;`, user.Phone)
+	err = query.Scan(&user.ID, &user.Password, &user.SignID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Credentials",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if user.SignType == models.SignTypeNative {
+		if isValid := ValidatePassword(password, user.Password); !isValid {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Invalid Credentials",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+	} else if user.SignType == models.SignTypeParty {
+		if signID != user.SignID {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Invalid Credentials",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+	} else {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid sign_type",
 			},
 		}
 		c.Status(400)
