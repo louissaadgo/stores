@@ -12,7 +12,7 @@ import (
 
 func AdminSignin(c *fiber.Ctx) error {
 	admin := models.Admin{}
-	err := c.BodyParser(admin)
+	err := c.BodyParser(&admin)
 
 	if err != nil {
 		response := models.Response{
