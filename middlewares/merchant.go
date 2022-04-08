@@ -74,6 +74,17 @@ func MerchantMiddleware(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
+	if userStatus == models.MerchantStatusBanned {
+		response := models.Response{
+			Type: models.TypeBannedResponse,
+			Data: views.Banned{
+				UserType: payload.UserType,
+				Status:   userStatus,
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
 	c.Set("request_user_id", payload.UserID)
 
 	return c.Next()
