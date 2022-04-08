@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"stores/db"
 	"stores/models"
 	"stores/token"
 	"stores/views"
@@ -59,5 +60,20 @@ func AdminMiddleware(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
-	//check if admin in db then pass request
+
+	query := db.DB.QueryRow(`SELECT id FROM admins WHERE id = $1;`, payload.UserID)
+	err = query.Scan(&payload.UserID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Unauthorized",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+	c.Set("request_user_id", payload.UserID)
+
+	return c.Next()
 }
