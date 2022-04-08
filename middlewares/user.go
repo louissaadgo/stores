@@ -50,7 +50,7 @@ func UserMiddleware(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
-	if payload.UserType != models.TypeMerchant {
+	if payload.UserType != models.TypeUser {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
@@ -61,7 +61,7 @@ func UserMiddleware(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id, status FROM merchants WHERE id = $1;`, payload.UserID)
+	query := db.DB.QueryRow(`SELECT id, status FROM users WHERE id = $1;`, payload.UserID)
 	var userStatus string
 	err = query.Scan(&payload.UserID, &userStatus)
 	if err != nil {
@@ -74,7 +74,7 @@ func UserMiddleware(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
-	if userStatus == models.MerchantStatusBanned {
+	if userStatus == models.UserStatusBanned {
 		response := models.Response{
 			Type: models.TypeBannedResponse,
 			Data: views.Banned{
