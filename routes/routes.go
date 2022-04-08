@@ -16,5 +16,5 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
 
 	//Admin specific routes
-	app.Use(middlewares.AdminMiddleware)
+	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
 }
