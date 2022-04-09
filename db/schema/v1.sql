@@ -170,9 +170,11 @@ CREATE TABLE orders (
     item_ids varchar ARRAY,
     total float,
     coupon_id varchar,
+    address_id varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (coupon_id) REFERENCES coupons(id)
+    FOREIGN KEY (coupon_id) REFERENCES coupons(id),
+    FOREIGN KEY (address_id) REFERENCES addresses(id)
 );
 
 CREATE TABLE favorites (
