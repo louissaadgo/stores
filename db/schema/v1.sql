@@ -164,6 +164,16 @@ CREATE TABLE items (
     FOREIGN KEY (subcategory_id) REFERENCES subcategories(id)
 );
 
+CREATE TABLE selected_attributes (
+    id varchar PRIMARY KEY,
+    item_id varchar,
+    attribute_id varchar,
+    attribute_value_id varchar,
+    FOREIGN KEY (item_id) REFERENCES items(id),
+    FOREIGN KEY (attribute_id) REFERENCES attributes(id),
+    FOREIGN KEY (attribute_value_id) REFERENCES attribute_values(id)
+);
+
 CREATE TABLE orders (
     id varchar PRIMARY KEY,
     status varchar,
