@@ -10,16 +10,6 @@ import (
 
 func BanMerchant(c *fiber.Ctx) error {
 	id := c.Params("id")
-	if id == "" {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Please provide a merchant ID",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
 	query := db.DB.QueryRow(`SELECT id FROM merchants WHERE id = $1;`, id)
 	err := query.Scan(&id)
 	if err != nil {
