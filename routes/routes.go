@@ -15,6 +15,8 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/auth/user/signup", controllers.UserSignup)
 	app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
 
+	app.Get("/api/v1/attributes", controllers.GetAllAttributes)
+
 	//User specific routes
 	app.Use("/api/v1/user/", middlewares.UserMiddleware)
 

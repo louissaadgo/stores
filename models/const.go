@@ -9,6 +9,7 @@ const (
 	TypeMerchant         = "merchant"
 	TypeUser             = "user"
 	TypeAllAdmins        = "all_admins"
+	TypeAllAttributes    = "all_attributes"
 	PlatformMobile       = "mobile"
 	PlatformWeb          = "web"
 	SignTypeNative       = "native"
