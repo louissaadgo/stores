@@ -45,7 +45,7 @@ func CreateAttribute(c *fiber.Ctx) error {
 		}
 	}
 
-	query := db.DB.QueryRow(`SELECT name FROM admins WHERE name = $1;`, attribute.Name)
+	query := db.DB.QueryRow(`SELECT name FROM attributes WHERE name = $1;`, attribute.Name)
 	err = query.Scan(&attribute.Name)
 	if err == nil || err != sql.ErrNoRows {
 		response := models.Response{
