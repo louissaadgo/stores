@@ -129,7 +129,7 @@ func CreateAdmin(c *fiber.Ctx) error {
 
 func GetAllAdmins(c *fiber.Ctx) error {
 	var admins []models.Admin
-	rows, err := db.DB.Query(`SELECT id, name, email FROM admins;`)
+	rows, err := db.DB.Query(`SELECT id, name, email, created_at, updated_at FROM admins;`)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -144,7 +144,7 @@ func GetAllAdmins(c *fiber.Ctx) error {
 
 	var admin models.Admin
 	for rows.Next() {
-		if err := rows.Scan(&admin.ID, &admin.Name, &admin.Email); err != nil {
+		if err := rows.Scan(&admin.ID, &admin.Name, &admin.Email, &admin.CreatedAt, &admin.UpdatedAt); err != nil {
 			response := models.Response{
 				Type: models.TypeErrorResponse,
 				Data: views.Error{
