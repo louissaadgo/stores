@@ -27,11 +27,12 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/admin/admins/", controllers.CreateAdmin)
 	app.Get("/api/v1/admin/admins/", controllers.GetAllAdmins)
 
-	app.Post("/api/v1/admin/ban/merchant/:id", controllers.BanMerchant)
-	app.Post("/api/v1/admin/ban/user/:id", controllers.BanUser)
+	app.Put("/api/v1/admin/ban/merchant/:id", controllers.BanMerchant)
+	app.Put("/api/v1/admin/ban/user/:id", controllers.BanUser)
 
-	app.Post("/api/v1/admin/activate/merchant/:id", controllers.ActivateMerchant)
-	app.Post("/api/v1/admin/activate/user/:id", controllers.ActivateUser)
+	app.Put("/api/v1/admin/activate/merchant/:id", controllers.ActivateMerchant)
+	app.Put("/api/v1/admin/activate/user/:id", controllers.ActivateUser)
 
 	app.Post("/api/v1/admin/attributes", controllers.CreateAttribute)
+	app.Put("/api/v1/admin/attributes/:id", controllers.CreateAttribute)
 }
