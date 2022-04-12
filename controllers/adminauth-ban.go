@@ -43,3 +43,39 @@ func BanMerchant(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func BanUser(c *fiber.Ctx) error {
+	id := c.Params("id")
+	query := db.DB.QueryRow(`SELECT id FROM users WHERE id = $1;`, id)
+	err := query.Scan(&id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid user ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+	_, err = db.DB.Exec(`UPDATE users SET status = $1 WHERE id = $2;`, models.UserStatusBanned, id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	response := models.Response{
+		Type: models.TypeSuccessResponse,
+		Data: views.Success{
+			Message: "User banned successfuly",
+		},
+	}
+
+	return c.JSON(response)
+}
