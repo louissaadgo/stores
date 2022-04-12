@@ -34,5 +34,5 @@ func Initialize(app *fiber.App) {
 	app.Put("/api/v1/admin/activate/user/:id", controllers.ActivateUser)
 
 	app.Post("/api/v1/admin/attributes", controllers.CreateAttribute)
-	app.Put("/api/v1/admin/attributes/:id", controllers.CreateAttribute)
+	app.Put("/api/v1/admin/attributes/:id", controllers.UpdateAttribute)
 }

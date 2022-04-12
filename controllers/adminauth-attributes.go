@@ -82,3 +82,78 @@ func CreateAttribute(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func UpdateAttribute(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	attribute := models.Attribute{}
+	err := c.BodyParser(&attribute)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if _, isValid := attribute.Validate(); !isValid {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	query := db.DB.QueryRow(`SELECT id FROM attributes WHERE id = $1;`, id)
+	err = query.Scan(&id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid attribute ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	query = db.DB.QueryRow(`SELECT name FROM attributes WHERE name = $1;`, attribute.Name)
+	err = query.Scan(&attribute.Name)
+	if err == nil || err != sql.ErrNoRows {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Attribute name already exists",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	_, err = db.DB.Exec(`UPDATE attributes SET name = $1 WHERE id = $2;`, attribute.Name, id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	response := models.Response{
+		Type: models.TypeSuccessResponse,
+		Data: views.Success{
+			Message: "Attribute updated successfuly",
+		},
+	}
+
+	return c.JSON(response)
+}
