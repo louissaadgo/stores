@@ -4,6 +4,7 @@ import (
 	"stores/db"
 	"stores/models"
 	"stores/views"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -22,7 +23,7 @@ func BanMerchant(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
-	_, err = db.DB.Exec(`UPDATE merchants SET status = $1 WHERE id = $2;`, models.MerchantStatusBanned, id)
+	_, err = db.DB.Exec(`UPDATE merchants SET status = $1, updated_at = $2 WHERE id = $3;`, models.MerchantStatusBanned, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -58,7 +59,7 @@ func BanUser(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
-	_, err = db.DB.Exec(`UPDATE users SET status = $1 WHERE id = $2;`, models.UserStatusBanned, id)
+	_, err = db.DB.Exec(`UPDATE users SET status = $1, updated_at = $2 WHERE id = $3;`, models.UserStatusBanned, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,

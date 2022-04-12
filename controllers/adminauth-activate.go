@@ -4,6 +4,7 @@ import (
 	"stores/db"
 	"stores/models"
 	"stores/views"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -22,7 +23,7 @@ func ActivateMerchant(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
-	_, err = db.DB.Exec(`UPDATE merchants SET status = $1 WHERE id = $2;`, models.MerchantStatusActive, id)
+	_, err = db.DB.Exec(`UPDATE merchants SET status = $1, updated_at = $2 WHERE id = $3;`, models.MerchantStatusActive, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -58,7 +59,7 @@ func ActivateUser(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
-	_, err = db.DB.Exec(`UPDATE users SET status = $1 WHERE id = $2;`, models.UserStatusActive, id)
+	_, err = db.DB.Exec(`UPDATE users SET status = $1, updated_at = $2 WHERE id = $3;`, models.UserStatusActive, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,

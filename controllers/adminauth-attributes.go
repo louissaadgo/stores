@@ -136,7 +136,7 @@ func UpdateAttribute(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`UPDATE attributes SET name = $1 WHERE id = $2;`, attribute.Name, id)
+	_, err = db.DB.Exec(`UPDATE attributes SET name = $1, updated_at = $2 WHERE id = $3;`, attribute.Name, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
