@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"stores/db"
 	"stores/models"
-	"stores/token"
 	"stores/views"
 	"time"
 
@@ -87,40 +86,10 @@ func CreateAdmin(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	tokenID := uuid.New().String()
-	if tokenID == "" {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Something went wrong please try again",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
-
-	token, err := token.GeneratePasetoToken(tokenID, admin.ID, models.TypeAdmin)
-	if err != nil {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Something went wrong please try again",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
-
-	cookie := fiber.Cookie{
-		Name:  "token",
-		Value: token,
-	}
-	c.Cookie(&cookie)
-
 	response := models.Response{
-		Type: models.TypeAuthResponse,
-		Data: views.Auth{
-			AuthToken: token,
+		Type: models.TypeSuccessResponse,
+		Data: views.Success{
+			Message: "Admin created successfuly",
 		},
 	}
 

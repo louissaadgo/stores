@@ -23,6 +23,7 @@ func Initialize(app *fiber.App) {
 
 	//Admin specific routes
 	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
+
 	app.Post("/api/v1/admin/admins/", controllers.CreateAdmin)
 	app.Get("/api/v1/admin/admins/", controllers.GetAllAdmins)
 
@@ -31,4 +32,6 @@ func Initialize(app *fiber.App) {
 
 	app.Post("/api/v1/admin/activate/merchant/:id", controllers.ActivateMerchant)
 	app.Post("/api/v1/admin/activate/user/:id", controllers.ActivateUser)
+
+	app.Post("/api/v1/admin/attributes", controllers.CreateAttribute)
 }
