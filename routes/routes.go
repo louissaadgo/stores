@@ -25,4 +25,6 @@ func Initialize(app *fiber.App) {
 	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
 	app.Post("/api/v1/admin/admins/", controllers.CreateAdmin)
 	app.Get("/api/v1/admin/admins/", controllers.GetAllAdmins)
+
+	app.Post("/api/v1/admin/ban/merchant/:id", controllers.BanMerchant)
 }

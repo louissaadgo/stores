@@ -2,6 +2,7 @@ package models
 
 const (
 	TypeErrorResponse    = "error"
+	TypeSuccessResponse  = "success"
 	TypeBannedResponse   = "banned"
 	TypeAuthResponse     = "auth"
 	TypeAdmin            = "admin"
