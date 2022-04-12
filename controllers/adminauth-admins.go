@@ -126,3 +126,43 @@ func CreateAdmin(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func GetAllAdmins(c *fiber.Ctx) error {
+	var admins []models.Admin
+	rows, err := db.DB.Query(`SELECT id, name, email FROM admins;`)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+	defer rows.Close()
+
+	var admin models.Admin
+	for rows.Next() {
+		if err := rows.Scan(&admin.ID, &admin.Name, &admin.Email); err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		admins = append(admins, admin)
+	}
+
+	response := models.Response{
+		Type: models.TypeAllAdmins,
+		Data: views.AllAdmins{
+			Admins: admins,
+		},
+	}
+
+	return c.JSON(response)
+}
