@@ -27,4 +27,5 @@ func Initialize(app *fiber.App) {
 	app.Get("/api/v1/admin/admins/", controllers.GetAllAdmins)
 
 	app.Post("/api/v1/admin/ban/merchant/:id", controllers.BanMerchant)
+	app.Post("/api/v1/admin/activate/merchant/:id", controllers.ActivateMerchant)
 }
