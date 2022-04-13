@@ -87,8 +87,8 @@ func CreateSubCategory(c *fiber.Ctx) error {
 func UpdateSubCategory(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	attributeValue := models.AttributeValue{}
-	err := c.BodyParser(&attributeValue)
+	subCategory := models.SubCategory{}
+	err := c.BodyParser(&subCategory)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -100,7 +100,7 @@ func UpdateSubCategory(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if _, isValid := attributeValue.Validate(); !isValid {
+	if _, isValid := subCategory.Validate(); !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
@@ -111,20 +111,20 @@ func UpdateSubCategory(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id FROM attribute_values WHERE id = $1;`, id)
+	query := db.DB.QueryRow(`SELECT id FROM subcategories WHERE id = $1;`, id)
 	err = query.Scan(&id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Invalid attribute value ID",
+				Error: "Invalid subcategory ID",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`UPDATE attribute_values SET name = $1, updated_at = $2 WHERE id = $3;`, attributeValue.Name, time.Now().UTC(), id)
+	_, err = db.DB.Exec(`UPDATE subcategories SET name = $1, updated_at = $2 WHERE id = $3;`, subCategory.Name, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -139,7 +139,7 @@ func UpdateSubCategory(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeSuccessResponse,
 		Data: views.Success{
-			Message: "Attribute value updated successfuly",
+			Message: "Subcategory updated successfuly",
 		},
 	}
 
