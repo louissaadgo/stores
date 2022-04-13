@@ -9,6 +9,7 @@ const (
 	TypeMerchant         = "merchant"
 	TypeUser             = "user"
 	TypeAllAdmins        = "all_admins"
+	TypeAllCoupons       = "all_coupons"
 	TypeAllAttributes    = "all_attributes"
 	PlatformMobile       = "mobile"
 	PlatformWeb          = "web"

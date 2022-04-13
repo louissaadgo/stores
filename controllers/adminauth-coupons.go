@@ -142,3 +142,43 @@ func UpdateCoupon(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func GetAllCoupons(c *fiber.Ctx) error {
+	var coupons []models.Coupon
+	rows, err := db.DB.Query(`SELECT id, value, type, max_usage, used, code, end_date, created_at, updated_at FROM coupons;`)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+	defer rows.Close()
+
+	var coupon models.Coupon
+	for rows.Next() {
+		if err := rows.Scan(&coupon.ID, &coupon.Value, &coupon.Type, &coupon.MaxUsage, &coupon.Used, &coupon.Code, &coupon.EndDate, &coupon.CreatedAt, &coupon.UpdatedAt); err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		coupons = append(coupons, coupon)
+	}
+
+	response := models.Response{
+		Type: models.TypeAllCoupons,
+		Data: views.AllCoupons{
+			Coupons: coupons,
+		},
+	}
+
+	return c.JSON(response)
+}
