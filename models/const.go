@@ -11,6 +11,7 @@ const (
 	TypeAllAdmins        = "all_admins"
 	TypeAllCoupons       = "all_coupons"
 	TypeAllAttributes    = "all_attributes"
+	TypeAllCategories    = "all_categories"
 	PlatformMobile       = "mobile"
 	PlatformWeb          = "web"
 	SignTypeNative       = "native"
