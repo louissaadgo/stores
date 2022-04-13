@@ -46,4 +46,7 @@ func Initialize(app *fiber.App) {
 
 	app.Post("/api/v1/admin/categories", controllers.CreateCategory)
 	app.Put("/api/v1/admin/categories/:id", controllers.UpdateCategory)
+
+	app.Post("/api/v1/admin/subcategories", controllers.CreateSubCategory)
+	app.Put("/api/v1/admin/subcategories/:id", controllers.UpdateSubCategory)
 }
