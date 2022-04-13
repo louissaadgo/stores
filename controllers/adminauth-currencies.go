@@ -79,3 +79,78 @@ func CreateCurrency(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func UpdateCurrency(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	currency := models.Currency{}
+	err := c.BodyParser(&currency)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if _, isValid := currency.Validate(); !isValid {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	query := db.DB.QueryRow(`SELECT id FROM currencies WHERE id = $1;`, id)
+	err = query.Scan(&id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid currency ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	query = db.DB.QueryRow(`SELECT name FROM currencies WHERE name = $1;`, currency.Name)
+	err = query.Scan(&currency.Name)
+	if err == nil || err != sql.ErrNoRows {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Currency name already exists",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	_, err = db.DB.Exec(`UPDATE currencies SET name = $1, symbol = $2, factor = $3 WHERE id = $4;`, currency.Name, currency.Symbol, currency.Factor, id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	response := models.Response{
+		Type: models.TypeSuccessResponse,
+		Data: views.Success{
+			Message: "Currency updated successfuly",
+		},
+	}
+
+	return c.JSON(response)
+}

@@ -42,4 +42,5 @@ func Initialize(app *fiber.App) {
 	app.Put("/api/v1/admin/attributevalues/:id", controllers.UpdateAttributeValue)
 
 	app.Post("/api/v1/admin/currencies", controllers.CreateCurrency)
+	app.Put("/api/v1/admin/currencies/:id", controllers.UpdateCurrency)
 }
