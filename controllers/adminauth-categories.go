@@ -86,8 +86,8 @@ func CreateCategory(c *fiber.Ctx) error {
 func UpdateCategory(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	attribute := models.Attribute{}
-	err := c.BodyParser(&attribute)
+	category := models.Category{}
+	err := c.BodyParser(&category)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -99,7 +99,7 @@ func UpdateCategory(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if _, isValid := attribute.Validate(); !isValid {
+	if _, isValid := category.Validate(); !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
@@ -110,33 +110,33 @@ func UpdateCategory(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id FROM attributes WHERE id = $1;`, id)
+	query := db.DB.QueryRow(`SELECT id FROM categories WHERE id = $1;`, id)
 	err = query.Scan(&id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Invalid attribute ID",
+				Error: "Invalid category ID",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	query = db.DB.QueryRow(`SELECT name FROM attributes WHERE name = $1;`, attribute.Name)
-	err = query.Scan(&attribute.Name)
+	query = db.DB.QueryRow(`SELECT name FROM categories WHERE name = $1;`, category.Name)
+	err = query.Scan(&category.Name)
 	if err == nil || err != sql.ErrNoRows {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Attribute name already exists",
+				Error: "Category name already exists",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`UPDATE attributes SET name = $1, updated_at = $2 WHERE id = $3;`, attribute.Name, time.Now().UTC(), id)
+	_, err = db.DB.Exec(`UPDATE categories SET name = $1, updated_at = $2 WHERE id = $3;`, category.Name, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -151,7 +151,7 @@ func UpdateCategory(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeSuccessResponse,
 		Data: views.Success{
-			Message: "Attribute updated successfuly",
+			Message: "Category updated successfuly",
 		},
 	}
 
