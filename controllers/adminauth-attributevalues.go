@@ -45,7 +45,8 @@ func CreateAttributeValue(c *fiber.Ctx) error {
 	}
 
 	query := db.DB.QueryRow(`SELECT id FROM attributes WHERE id = $1;`, attributeValue.AttributeID)
-	err = query.Scan()
+	var attributeID string
+	err = query.Scan(&attributeID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
