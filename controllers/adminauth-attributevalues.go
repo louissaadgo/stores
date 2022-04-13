@@ -83,3 +83,65 @@ func CreateAttributeValue(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func UpdateAttributeValue(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	attributeValue := models.AttributeValue{}
+	err := c.BodyParser(&attributeValue)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if _, isValid := attributeValue.Validate(); !isValid {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	query := db.DB.QueryRow(`SELECT id FROM attribute_values WHERE id = $1;`, id)
+	err = query.Scan(&id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid attribute value ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	_, err = db.DB.Exec(`UPDATE attribute_values SET name = $1, updated_at = $2 WHERE id = $3;`, attributeValue.Name, time.Now().UTC(), id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	response := models.Response{
+		Type: models.TypeSuccessResponse,
+		Data: views.Success{
+			Message: "Attribute value updated successfuly",
+		},
+	}
+
+	return c.JSON(response)
+}
