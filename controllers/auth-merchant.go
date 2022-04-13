@@ -40,7 +40,7 @@ func MerchantSignup(c *fiber.Ctx) error {
 	for {
 		merchant.ID = uuid.New().String()
 		query := db.DB.QueryRow(`SELECT id FROM merchants WHERE id = $1;`, merchant.ID)
-		err = query.Scan()
+		err = query.Scan(&merchant.ID)
 		if err != nil {
 			break
 		}

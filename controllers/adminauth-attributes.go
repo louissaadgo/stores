@@ -39,7 +39,7 @@ func CreateAttribute(c *fiber.Ctx) error {
 	for {
 		attribute.ID = uuid.New().String()
 		query := db.DB.QueryRow(`SELECT id FROM attributes WHERE id = $1;`, attribute.ID)
-		err = query.Scan()
+		err = query.Scan(&attribute.ID)
 		if err != nil {
 			break
 		}

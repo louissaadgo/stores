@@ -40,7 +40,7 @@ func UserSignup(c *fiber.Ctx) error {
 	for {
 		user.ID = uuid.New().String()
 		query := db.DB.QueryRow(`SELECT id FROM users WHERE id = $1;`, user.ID)
-		err = query.Scan()
+		err = query.Scan(&user.ID)
 		if err != nil {
 			break
 		}

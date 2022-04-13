@@ -39,7 +39,7 @@ func CreateAdmin(c *fiber.Ctx) error {
 	for {
 		admin.ID = uuid.New().String()
 		query := db.DB.QueryRow(`SELECT id FROM admins WHERE id = $1;`, admin.ID)
-		err = query.Scan()
+		err = query.Scan(&admin.ID)
 		if err != nil {
 			break
 		}
