@@ -20,6 +20,7 @@ const (
 	MerchantStatusBanned = "banned"
 	UserStatusActive     = "active"
 	UserStatusBanned     = "banned"
+	ItemStatusActive     = "active"
 	CouponTypeFixed      = "fixed"
 	CouponTypePercentage = "percentage"
 )

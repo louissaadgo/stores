@@ -30,6 +30,9 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/merchant/links", controllers.CreateLink)
 	app.Put("/api/v1/merchant/links/:id", controllers.UpdateLink)
 
+	app.Post("/api/v1/merchant/items", controllers.CreateItem)
+	app.Put("/api/v1/merchant/items/:id", controllers.UpdateItem)
+
 	//Admin specific routes
 	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
 
