@@ -218,7 +218,6 @@ CREATE TABLE carts (
 CREATE TABLE interests (
     id varchar PRIMARY KEY,
     user_id varchar,
-    category_ids varchar ARRAY,
-    updated_at  TIMESTAMP WITH TIME ZONE,
+    category_id varchar,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
