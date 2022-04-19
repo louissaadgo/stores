@@ -25,6 +25,9 @@ func Initialize(app *fiber.App) {
 	app.Put("/api/v1/user/addresses/:id", controllers.UpdateAddress)
 	app.Delete("/api/v1/user/addresses/:id", controllers.DeleteAddress)
 
+	app.Post("/api/v1/user/favorites/:id", controllers.AddFavorite)
+	app.Delete("/api/v1/user/favorites/:id", controllers.DeleteFavorite)
+
 	//Merchant specific routes
 	app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)
 
