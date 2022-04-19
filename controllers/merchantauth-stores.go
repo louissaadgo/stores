@@ -88,8 +88,8 @@ func CreateStore(c *fiber.Ctx) error {
 func UpdateStore(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	attribute := models.Attribute{}
-	err := c.BodyParser(&attribute)
+	store := models.Store{}
+	err := c.BodyParser(&store)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -101,7 +101,7 @@ func UpdateStore(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if _, isValid := attribute.Validate(); !isValid {
+	if _, isValid := store.Validate(); !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
@@ -112,33 +112,32 @@ func UpdateStore(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id FROM attributes WHERE id = $1;`, id)
-	err = query.Scan(&id)
+	query := db.DB.QueryRow(`SELECT id, merchant_id FROM stores WHERE id = $1;`, id)
+	var merchantID string
+	err = query.Scan(&id, &merchantID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Invalid attribute ID",
+				Error: "Invalid store ID",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	query = db.DB.QueryRow(`SELECT name FROM attributes WHERE name = $1;`, attribute.Name)
-	err = query.Scan(&attribute.Name)
-	if err == nil || err != sql.ErrNoRows {
+	if merchantID != c.GetRespHeader("request_user_id") {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Attribute name already exists",
+				Error: "Merchant can only edits his own stores",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`UPDATE attributes SET name = $1, updated_at = $2 WHERE id = $3;`, attribute.Name, time.Now().UTC(), id)
+	_, err = db.DB.Exec(`UPDATE stores SET description = $1, phone = $2, location = $3, country = $4, updated_at = $5 WHERE id = $6;`, store.Description, store.Phone, store.Location, store.Country, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -153,7 +152,7 @@ func UpdateStore(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeSuccessResponse,
 		Data: views.Success{
-			Message: "Attribute updated successfuly",
+			Message: "Store updated successfuly",
 		},
 	}
 
