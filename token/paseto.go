@@ -43,5 +43,9 @@ func VerifyPasetoToken(token string) (models.PasetoTokenPayload, bool) {
 		return payload, false
 	}
 
+	if !time.Now().Before(payload.ExpiresAt) {
+		return payload, false
+	}
+
 	return payload, true
 }
