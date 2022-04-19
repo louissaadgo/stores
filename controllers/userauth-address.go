@@ -144,3 +144,53 @@ func UpdateAddress(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func DeleteAddress(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	query := db.DB.QueryRow(`SELECT id, user_id FROM addresses WHERE id = $1;`, id)
+	var userID string
+	err := query.Scan(&id, &userID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid address ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if userID != c.GetRespHeader("request_user_id") {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "User can only delete his own address",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	_, err = db.DB.Exec(`DELETE FROM addresses WHERE id = $1;`, id)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	response := models.Response{
+		Type: models.TypeSuccessResponse,
+		Data: views.Success{
+			Message: "Address deleted successfuly",
+		},
+	}
+
+	return c.JSON(response)
+}

@@ -23,6 +23,7 @@ func Initialize(app *fiber.App) {
 
 	app.Post("/api/v1/user/addresses", controllers.CreateAddress)
 	app.Put("/api/v1/user/addresses/:id", controllers.UpdateAddress)
+	app.Delete("/api/v1/user/addresses/:id", controllers.DeleteAddress)
 
 	//Merchant specific routes
 	app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)
