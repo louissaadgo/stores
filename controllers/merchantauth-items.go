@@ -105,7 +105,7 @@ func CreateItem(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Something went wrong please try again",
+				Error: err.Error(),
 			},
 		}
 		c.Status(400)

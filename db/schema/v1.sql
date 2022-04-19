@@ -144,9 +144,7 @@ CREATE TABLE items (
     description varchar,
     long_description varchar,
     price float,
-    images varchar ARRAY,
     store_id varchar,
-    attribute_ids varchar ARRAY,
     category_id varchar,
     subcategory_id varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
@@ -156,6 +154,13 @@ CREATE TABLE items (
     FOREIGN KEY (store_id) REFERENCES stores(id),
     FOREIGN KEY (category_id) REFERENCES categories(id),
     FOREIGN KEY (subcategory_id) REFERENCES subcategories(id)
+);
+
+CREATE TABLE item_images (
+    id varchar PRIMARY KEY,
+    item_id varchar,
+    url varchar,
+    FOREIGN KEY (item_id) REFERENCES items(id)
 );
 
 CREATE TABLE selected_attributes (
