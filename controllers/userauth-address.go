@@ -74,8 +74,8 @@ func CreateAddress(c *fiber.Ctx) error {
 func UpdateAddress(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	store := models.Store{}
-	err := c.BodyParser(&store)
+	address := models.Address{}
+	err := c.BodyParser(&address)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -87,7 +87,7 @@ func UpdateAddress(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if _, isValid := store.Validate(); !isValid {
+	if _, isValid := address.Validate(); !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
@@ -98,32 +98,32 @@ func UpdateAddress(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id, merchant_id FROM stores WHERE id = $1;`, id)
-	var merchantID string
-	err = query.Scan(&id, &merchantID)
+	query := db.DB.QueryRow(`SELECT id, user_id FROM addresses WHERE id = $1;`, id)
+	var userID string
+	err = query.Scan(&id, &userID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Invalid store ID",
+				Error: "Invalid address ID",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	if merchantID != c.GetRespHeader("request_user_id") {
+	if userID != c.GetRespHeader("request_user_id") {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Merchant can only edit his own stores",
+				Error: "User can only edit his own address",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`UPDATE stores SET description = $1, phone = $2, location = $3, country = $4, updated_at = $5 WHERE id = $6;`, store.Description, store.Phone, store.Location, store.Country, time.Now().UTC(), id)
+	_, err = db.DB.Exec(`UPDATE addresses SET name = $1, region = $2, city = $3, address = $4, longitude = $5, latitude = $6, updated_at = $7 WHERE id = $8;`, address.Name, address.Region, address.City, address.Address, address.Longitude, address.Latitude, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -138,7 +138,7 @@ func UpdateAddress(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeSuccessResponse,
 		Data: views.Success{
-			Message: "Store updated successfuly",
+			Message: "Address updated successfuly",
 		},
 	}
 
