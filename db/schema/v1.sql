@@ -210,8 +210,7 @@ CREATE TABLE reviews (
 CREATE TABLE carts (
     id varchar PRIMARY KEY,
     user_id varchar,
-    item_ids varchar ARRAY,
-    updated_at  TIMESTAMP WITH TIME ZONE,
+    item_id varchar,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
