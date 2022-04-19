@@ -31,6 +31,9 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/user/interests/:id", controllers.AddInterest)
 	app.Delete("/api/v1/user/interests/:id", controllers.DeleteInterest)
 
+	app.Post("/api/v1/user/carts/:id", controllers.AddToCart)
+	app.Delete("/api/v1/user/carts/:id", controllers.DeleteFromCart)
+
 	//Merchant specific routes
 	app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)
 
