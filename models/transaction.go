@@ -5,11 +5,12 @@ import (
 )
 
 type Transaction struct {
-	ID        string    `json:"id"`
-	WalletID  string    `json:"wallet_id"`
-	Amount    float64   `json:"amount"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID         string    `json:"id"`
+	UserID     string    `json:"user_id"`
+	CurrencyID string    `json:"currency_id"`
+	Amount     float64   `json:"amount"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 func (admin *Transaction) Validate() ([]error, bool) {

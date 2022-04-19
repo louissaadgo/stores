@@ -123,24 +123,15 @@ CREATE TABLE currencies (
     factor float
 );
 
-CREATE TABLE wallets (
+CREATE TABLE transactions (
     id varchar PRIMARY KEY,
     user_id varchar,
-    amount float,
     currency_id varchar,
+    amount float,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (currency_id) REFERENCES currencies(id)
-);
-
-CREATE TABLE transactions (
-    id varchar PRIMARY KEY,
-    wallet_id varchar,
-    amount float,
-    created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (wallet_id) REFERENCES wallets(id)
 );
 
 CREATE TABLE items (
