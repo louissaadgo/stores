@@ -62,14 +62,14 @@ func AddInterest(c *fiber.Ctx) error {
 func DeleteInterest(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	query := db.DB.QueryRow(`SELECT id, user_id FROM favorites WHERE id = $1;`, id)
+	query := db.DB.QueryRow(`SELECT id, user_id FROM interests WHERE id = $1;`, id)
 	var userID string
 	err := query.Scan(&id, &userID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Invalid favorite ID",
+				Error: "Invalid interest ID",
 			},
 		}
 		c.Status(400)
@@ -80,14 +80,14 @@ func DeleteInterest(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "User can only delete his own favorites",
+				Error: "User can only delete his own interests",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`DELETE FROM favorites WHERE id = $1;`, id)
+	_, err = db.DB.Exec(`DELETE FROM interests WHERE id = $1;`, id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -102,7 +102,7 @@ func DeleteInterest(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeSuccessResponse,
 		Data: views.Success{
-			Message: "Favorite deleted successfuly",
+			Message: "Interest deleted successfuly",
 		},
 	}
 
