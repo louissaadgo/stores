@@ -99,17 +99,42 @@ func CreateItem(c *fiber.Ctx) error {
 	item.UpdatedAt = time.Now().UTC()
 	item.Status = models.ItemStatusActive
 
-	_, err = db.DB.Exec(`INSERT INTO items(id, name, sku, description, long_description, price, images, store_id, created_at, updated_at, category_id, subcategory_id, stock, status)
-	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);`, item.ID, item.Name, item.SKU, item.Description, item.LongDescription, item.Price, item.Images, item.StoreID, item.CreatedAt, item.UpdatedAt, item.CategoryID, item.SubCategoryID, item.Stock, item.Status)
+	_, err = db.DB.Exec(`INSERT INTO items(id, name, sku, description, long_description, price, store_id, created_at, updated_at, category_id, subcategory_id, stock, status)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`, item.ID, item.Name, item.SKU, item.Description, item.LongDescription, item.Price, item.StoreID, item.CreatedAt, item.UpdatedAt, item.CategoryID, item.SubCategoryID, item.Stock, item.Status)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: err.Error(),
+				Error: "Something went wrong please try again",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
+	}
+
+	for _, image := range item.Images {
+		var id string
+		for {
+			id = uuid.New().String()
+			query := db.DB.QueryRow(`SELECT id FROM item_images WHERE id = $1;`, id)
+			err = query.Scan(&id)
+			if err != nil {
+				break
+			}
+		}
+		_, err = db.DB.Exec(`INSERT INTO item_images(id, item_id, url)
+	VALUES($1, $2, $3);`, id, item.ID, image)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+
 	}
 
 	response := models.Response{
