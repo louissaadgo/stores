@@ -90,8 +90,10 @@ func UserSignup(c *fiber.Ctx) error {
 	user.CreatedAt = time.Now().UTC()
 	user.UpdatedAt = time.Now().UTC()
 
-	_, err = db.DB.Exec(`INSERT INTO users(id, name, phone, password, sign_type, sign_id, bday, image, country, status, loyality_points, created_at, updated_at)
-	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`, user.ID, user.Name, user.Phone, user.Password, user.SignType, user.SignID, user.Bday, user.Image, user.Country, user.Status, user.LoyalityPoints, user.CreatedAt, user.UpdatedAt)
+	tokenID := uuid.New().String()
+
+	_, err = db.DB.Exec(`INSERT INTO users(id, name, phone, password, sign_type, sign_id, bday, image, country, status, loyality_points, created_at, updated_at, token_id)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);`, user.ID, user.Name, user.Phone, user.Password, user.SignType, user.SignID, user.Bday, user.Image, user.Country, user.Status, user.LoyalityPoints, user.CreatedAt, user.UpdatedAt, tokenID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -103,7 +105,6 @@ func UserSignup(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	tokenID := uuid.New().String()
 	if tokenID == "" {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -219,6 +220,17 @@ func UserSignin(c *fiber.Ctx) error {
 
 	tokenID := uuid.New().String()
 	if tokenID == "" {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+	_, err = db.DB.Exec(`UPDATE users SET token_id = $1 WHERE id = $2;`, tokenID, user.ID)
+	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{

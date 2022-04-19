@@ -61,10 +61,11 @@ func UserMiddleware(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id, status FROM users WHERE id = $1;`, payload.UserID)
+	query := db.DB.QueryRow(`SELECT id, status, token_id FROM users WHERE id = $1;`, payload.UserID)
 	var userStatus string
-	err = query.Scan(&payload.UserID, &userStatus)
-	if err != nil {
+	var tokenID string
+	err = query.Scan(&payload.UserID, &userStatus, &tokenID)
+	if err != nil || tokenID != payload.ID {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
