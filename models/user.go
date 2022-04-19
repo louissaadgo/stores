@@ -11,6 +11,7 @@ type User struct {
 	Password       string    `json:"password"`
 	SignType       string    `json:"sign_type"`
 	SignID         string    `json:"sign_id"`
+	TokenID        string    `json:"token_id"`
 	Bday           time.Time `json:"bday"`
 	Image          string    `json:"image"`
 	Country        string    `json:"country"`

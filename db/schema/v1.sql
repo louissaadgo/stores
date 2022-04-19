@@ -2,6 +2,7 @@ CREATE TABLE users (
     id varchar PRIMARY KEY,
     phone varchar,
     name varchar,
+    token_id varchar,
     password varchar,
     sign_type varchar,
     sign_id varchar,
@@ -32,6 +33,7 @@ CREATE TABLE admins (
     id varchar PRIMARY KEY,
     name varchar,
     email varchar,
+    token_id varchar,
     password varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE
@@ -41,6 +43,7 @@ CREATE TABLE merchants (
     id varchar PRIMARY KEY,
     email varchar,
     status varchar,
+    token_id varchar,
     password varchar,
     name varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
