@@ -189,8 +189,7 @@ CREATE TABLE orders (
 CREATE TABLE favorites (
     id varchar PRIMARY KEY,
     user_id varchar,
-    item_ids varchar ARRAY,
-    updated_at  TIMESTAMP WITH TIME ZONE,
+    item_id varchar,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
