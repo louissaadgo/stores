@@ -24,6 +24,8 @@ func Initialize(app *fiber.App) {
 	//Merchant specific routes
 	app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)
 
+	app.Post("/api/v1/merchant/stores", controllers.CreateStore)
+
 	//Admin specific routes
 	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
 
