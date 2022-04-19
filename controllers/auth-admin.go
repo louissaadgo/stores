@@ -73,6 +73,18 @@ func AdminSignin(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
+	_, err = db.DB.Exec(`UPDATE admins SET token_id = $1 WHERE id = $2;`, tokenID, admin.ID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
 	token, err := token.GeneratePasetoToken(tokenID, admin.ID, models.TypeAdmin)
 	if err != nil {
 		response := models.Response{
