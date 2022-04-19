@@ -20,10 +20,11 @@ func GeneratePasetoToken(id, userID, userType string) (string, error) {
 	}
 
 	payload := models.PasetoTokenPayload{
-		ID:       id,
-		UserID:   userID,
-		UserType: userType,
-		IssuedAt: time.Now(),
+		ID:        id,
+		UserID:    userID,
+		UserType:  userType,
+		IssuedAt:  time.Now(),
+		ExpiresAt: time.Now().Add(time.Hour * 24 * 7),
 	}
 
 	paseto := paseto.NewV2()

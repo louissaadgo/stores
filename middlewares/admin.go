@@ -61,9 +61,11 @@ func AdminMiddleware(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id FROM admins WHERE id = $1;`, payload.UserID)
-	err = query.Scan(&payload.UserID)
-	if err != nil {
+	query := db.DB.QueryRow(`SELECT id, token_id FROM admins WHERE id = $1;`, payload.UserID)
+	var tokenID string
+	err = query.Scan(&payload.UserID, &tokenID)
+
+	if err != nil || tokenID != payload.ID {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
@@ -73,6 +75,7 @@ func AdminMiddleware(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
+
 	c.Set("request_user_id", payload.UserID)
 
 	return c.Next()
