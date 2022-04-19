@@ -130,7 +130,7 @@ func UpdateStore(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Merchant can only edits his own stores",
+				Error: "Merchant can only edit his own stores",
 			},
 		}
 		c.Status(400)

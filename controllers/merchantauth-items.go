@@ -150,8 +150,8 @@ func CreateItem(c *fiber.Ctx) error {
 func UpdateItem(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	store := models.Store{}
-	err := c.BodyParser(&store)
+	item := models.Item{}
+	err := c.BodyParser(&item)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -163,7 +163,7 @@ func UpdateItem(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if _, isValid := store.Validate(); !isValid {
+	if _, isValid := item.Validate(); !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
@@ -174,9 +174,23 @@ func UpdateItem(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id, merchant_id FROM stores WHERE id = $1;`, id)
+	query := db.DB.QueryRow(`SELECT id, store_id FROM items WHERE id = $1;`, id)
+	var storeID string
+	err = query.Scan(&id, &storeID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid item ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	query = db.DB.QueryRow(`SELECT merchant_id FROM stores WHERE id = $1;`, storeID)
 	var merchantID string
-	err = query.Scan(&id, &merchantID)
+	err = query.Scan(&merchantID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -192,14 +206,40 @@ func UpdateItem(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Merchant can only edits his own stores",
+				Error: "Merchant can only edits his own items",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`UPDATE stores SET description = $1, phone = $2, location = $3, country = $4, updated_at = $5 WHERE id = $6;`, store.Description, store.Phone, store.Location, store.Country, time.Now().UTC(), id)
+	query = db.DB.QueryRow(`SELECT id FROM categories WHERE id = $1;`, item.CategoryID)
+	err = query.Scan(&item.CategoryID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid category ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	query = db.DB.QueryRow(`SELECT id FROM subcategories WHERE id = $1;`, item.SubCategoryID)
+	err = query.Scan(&item.SubCategoryID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid subcategory ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	_, err = db.DB.Exec(`UPDATE items SET name = $1, sku = $2, description = $3, long_description = $4, price = $5, updated_at = $6, category_id = $7, subcategory_id = $8, stock = $9 WHERE id = $10;`, item.Name, item.SKU, item.Description, item.LongDescription, item.Price, time.Now().UTC(), item.CategoryID, item.SubCategoryID, item.Stock, id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -214,7 +254,7 @@ func UpdateItem(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeSuccessResponse,
 		Data: views.Success{
-			Message: "Store updated successfuly",
+			Message: "Item updated successfuly",
 		},
 	}
 
