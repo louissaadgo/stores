@@ -98,8 +98,8 @@ func CreateLink(c *fiber.Ctx) error {
 func UpdateLink(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	attributeValue := models.AttributeValue{}
-	err := c.BodyParser(&attributeValue)
+	link := models.Link{}
+	err := c.BodyParser(&link)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -111,7 +111,7 @@ func UpdateLink(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if _, isValid := attributeValue.Validate(); !isValid {
+	if _, isValid := link.Validate(); !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
@@ -122,20 +122,34 @@ func UpdateLink(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id FROM attribute_values WHERE id = $1;`, id)
-	err = query.Scan(&id)
+	query := db.DB.QueryRow(`SELECT id, store_id FROM links WHERE id = $1;`, id)
+	var storeID string
+	err = query.Scan(&id, &storeID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Invalid attribute value ID",
+				Error: "Invalid link ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+	query = db.DB.QueryRow(`SELECT merchant_id FROM stores WHERE id = $1;`, storeID)
+	var merchantID string
+	err = query.Scan(&merchantID)
+	if merchantID != c.GetRespHeader("request_user_id") {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Merchant can only update links to his own stores",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`UPDATE attribute_values SET name = $1, updated_at = $2 WHERE id = $3;`, attributeValue.Name, time.Now().UTC(), id)
+	_, err = db.DB.Exec(`UPDATE links SET name = $1, url = $2, logo = $3, updated_at = $4 WHERE id = $5;`, link.Name, link.URL, link.Logo, time.Now().UTC(), id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -150,7 +164,7 @@ func UpdateLink(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeSuccessResponse,
 		Data: views.Success{
-			Message: "Attribute value updated successfuly",
+			Message: "Link updated successfuly",
 		},
 	}
 
