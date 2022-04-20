@@ -71,8 +71,8 @@ func CreateTransaction(c *fiber.Ctx) error {
 	}
 	transaction.CreatedAt = time.Now().UTC()
 
-	_, err = db.DB.Exec(`INSERT INTO currencies(id, name, symbol, factor)
-	VALUES($1, $2, $3, $4);`, currency.ID, currency.Name, currency.Symbol, currency.Factor)
+	_, err = db.DB.Exec(`INSERT INTO transactions(id, user_id, currency_id, amount, created_at)
+	VALUES($1, $2, $3, $4, $5);`, transaction.ID, transaction.UserID, transaction.CurrencyID, transaction.Amount, transaction.CreatedAt)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -87,7 +87,7 @@ func CreateTransaction(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeSuccessResponse,
 		Data: views.Success{
-			Message: "Currency added successfuly",
+			Message: "Transaction created successfuly",
 		},
 	}
 
