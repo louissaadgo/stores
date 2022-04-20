@@ -10,7 +10,6 @@ type Transaction struct {
 	CurrencyID string    `json:"currency_id"`
 	Amount     float64   `json:"amount"`
 	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 func (admin *Transaction) Validate() ([]error, bool) {

@@ -132,7 +132,6 @@ CREATE TABLE transactions (
     currency_id varchar,
     amount float,
     created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (currency_id) REFERENCES currencies(id)
 );

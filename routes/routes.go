@@ -76,4 +76,6 @@ func Initialize(app *fiber.App) {
 	app.Get("/api/v1/admin/coupons", controllers.GetAllCoupons)
 	app.Post("/api/v1/admin/coupons", controllers.CreateCoupon)
 	app.Put("/api/v1/admin/coupons/:id", controllers.UpdateCoupon)
+
+	app.Post("/api/v1/admin/transactions", controllers.CreateTransaction)
 }
