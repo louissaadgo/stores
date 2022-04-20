@@ -12,6 +12,7 @@ const (
 	TypeAllCoupons       = "all_coupons"
 	TypeAllAttributes    = "all_attributes"
 	TypeAllCategories    = "all_categories"
+	TypeAllWallets       = "all_wallets"
 	PlatformMobile       = "mobile"
 	PlatformWeb          = "web"
 	SignTypeNative       = "native"
