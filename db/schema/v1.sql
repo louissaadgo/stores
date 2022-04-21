@@ -175,7 +175,6 @@ CREATE TABLE selected_attributes (
 CREATE TABLE orders (
     id varchar PRIMARY KEY,
     status varchar,
-    item_ids varchar ARRAY,
     total float,
     coupon_id varchar,
     address_id varchar,
@@ -218,4 +217,15 @@ CREATE TABLE interests (
     user_id varchar,
     category_id varchar,
     FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE items_order (
+    id varchar PRIMARY KEY,
+    order_id varchar,
+    item_id varchar,
+    store_id varchar,
+    price float,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (item_id) REFERENCES items(id),
+    FOREIGN KEY (store_id) REFERENCES stores(id)
 );
