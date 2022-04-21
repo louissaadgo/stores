@@ -176,11 +176,13 @@ CREATE TABLE orders (
     id varchar PRIMARY KEY,
     status varchar,
     total float,
+    user_id varchar,
     coupon_id varchar,
     address_id varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (coupon_id) REFERENCES coupons(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (address_id) REFERENCES addresses(id)
 );
 
