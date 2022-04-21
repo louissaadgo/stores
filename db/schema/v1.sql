@@ -176,6 +176,7 @@ CREATE TABLE orders (
     id varchar PRIMARY KEY,
     status varchar,
     total float,
+    total_discounted float,
     user_id varchar,
     coupon_id varchar,
     address_id varchar,
