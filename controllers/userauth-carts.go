@@ -163,51 +163,27 @@ func GetCart(c *fiber.Ctx) error {
 	return c.JSON(response)
 }
 
-// func EmptyCart(c *fiber.Ctx) error {
+func EmptyCart(c *fiber.Ctx) error {
+	userID := c.GetRespHeader("request_user_id")
 
-// 	query := db.DB.QueryRow(`SELECT id, user_id FROM carts WHERE id = $1;`, id)
-// 	var userID string
-// 	err := query.Scan(&id, &userID)
-// 	if err != nil {
-// 		response := models.Response{
-// 			Type: models.TypeErrorResponse,
-// 			Data: views.Error{
-// 				Error: "Invalid cart ID",
-// 			},
-// 		}
-// 		c.Status(400)
-// 		return c.JSON(response)
-// 	}
+	_, err := db.DB.Exec(`DELETE FROM carts WHERE user_id = $1;`, userID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
 
-// 	if userID != c.GetRespHeader("request_user_id") {
-// 		response := models.Response{
-// 			Type: models.TypeErrorResponse,
-// 			Data: views.Error{
-// 				Error: "User can only delete from his own cart",
-// 			},
-// 		}
-// 		c.Status(400)
-// 		return c.JSON(response)
-// 	}
+	response := models.Response{
+		Type: models.TypeSuccessResponse,
+		Data: views.Success{
+			Message: "Cart emptied successfuly",
+		},
+	}
 
-// 	_, err = db.DB.Exec(`DELETE FROM carts WHERE id = $1;`, id)
-// 	if err != nil {
-// 		response := models.Response{
-// 			Type: models.TypeErrorResponse,
-// 			Data: views.Error{
-// 				Error: "Something went wrong please try again",
-// 			},
-// 		}
-// 		c.Status(400)
-// 		return c.JSON(response)
-// 	}
-
-// 	response := models.Response{
-// 		Type: models.TypeSuccessResponse,
-// 		Data: views.Success{
-// 			Message: "Cart item deleted successfuly",
-// 		},
-// 	}
-
-// 	return c.JSON(response)
-// }
+	return c.JSON(response)
+}
