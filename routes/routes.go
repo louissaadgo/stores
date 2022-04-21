@@ -32,6 +32,7 @@ func Initialize(app *fiber.App) {
 	app.Delete("/api/v1/user/interests/:id", controllers.DeleteInterest)
 
 	app.Get("/api/v1/user/carts", controllers.GetCart)
+	// app.Delete("/api/v1/user/carts", controllers.EmptyCart)
 	app.Post("/api/v1/user/carts/:id", controllers.AddToCart)
 	app.Delete("/api/v1/user/carts/:id", controllers.DeleteFromCart)
 
