@@ -36,7 +36,7 @@ func Initialize(app *fiber.App) {
 
 	app.Get("/api/v1/user/wallets", controllers.GetAllWallets)
 
-	app.Post("/api/v1/user/orders", controllers.CreateOrder)
+	// app.Post("/api/v1/user/orders", controllers.CreateOrder)
 
 	//Merchant specific routes
 	app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)

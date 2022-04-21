@@ -209,6 +209,7 @@ CREATE TABLE carts (
     id varchar PRIMARY KEY,
     user_id varchar,
     item_id varchar,
+    quantity int,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
