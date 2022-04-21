@@ -31,12 +31,11 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/user/interests/:id", controllers.AddInterest)
 	app.Delete("/api/v1/user/interests/:id", controllers.DeleteInterest)
 
+	app.Get("/api/v1/user/carts", controllers.GetCart)
 	app.Post("/api/v1/user/carts/:id", controllers.AddToCart)
 	app.Delete("/api/v1/user/carts/:id", controllers.DeleteFromCart)
 
 	app.Get("/api/v1/user/wallets", controllers.GetAllWallets)
-
-	// app.Post("/api/v1/user/orders", controllers.CreateOrder)
 
 	//Merchant specific routes
 	app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)

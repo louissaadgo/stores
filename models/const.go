@@ -13,6 +13,7 @@ const (
 	TypeAllAttributes    = "all_attributes"
 	TypeAllCategories    = "all_categories"
 	TypeAllWallets       = "all_wallets"
+	TypeUserCart         = "user_cart"
 	PlatformMobile       = "mobile"
 	PlatformWeb          = "web"
 	SignTypeNative       = "native"
