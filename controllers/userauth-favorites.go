@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"stores/db"
 	"stores/models"
 	"stores/views"
@@ -13,6 +14,19 @@ func AddFavorite(c *fiber.Ctx) error {
 	itemID := c.Params("id")
 	favorite := models.Favorite{}
 
+	query := db.DB.QueryRow(`SELECT id FROM favorites WHERE user_id = $1 AND item_id = $2;`, c.GetRespHeader("request_user_id"), itemID)
+	err := query.Scan(&favorite.ID)
+	if err == nil || err != sql.ErrNoRows {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Already in favorites",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
 	for {
 		favorite.ID = uuid.New().String()
 		query := db.DB.QueryRow(`SELECT id FROM favorites WHERE id = $1;`, favorite.ID)
@@ -23,8 +37,8 @@ func AddFavorite(c *fiber.Ctx) error {
 	}
 	favorite.UserID = c.GetRespHeader("request_user_id")
 
-	query := db.DB.QueryRow(`SELECT id FROM items WHERE id = $1;`, itemID)
-	err := query.Scan(&itemID)
+	query = db.DB.QueryRow(`SELECT id FROM items WHERE id = $1;`, itemID)
+	err = query.Scan(&itemID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,

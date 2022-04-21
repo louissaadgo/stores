@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"stores/db"
 	"stores/models"
 	"stores/views"
@@ -13,6 +14,19 @@ func AddInterest(c *fiber.Ctx) error {
 	categoryID := c.Params("id")
 	interest := models.Interest{}
 
+	query := db.DB.QueryRow(`SELECT id FROM interests WHERE user_id = $1 AND category_id = $2;`, c.GetRespHeader("request_user_id"), categoryID)
+	err := query.Scan(&interest.ID)
+	if err == nil || err != sql.ErrNoRows {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Already in interests",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
 	for {
 		interest.ID = uuid.New().String()
 		query := db.DB.QueryRow(`SELECT id FROM interests WHERE id = $1;`, interest.ID)
@@ -23,8 +37,8 @@ func AddInterest(c *fiber.Ctx) error {
 	}
 	interest.UserID = c.GetRespHeader("request_user_id")
 
-	query := db.DB.QueryRow(`SELECT id FROM categories WHERE id = $1;`, categoryID)
-	err := query.Scan(&categoryID)
+	query = db.DB.QueryRow(`SELECT id FROM categories WHERE id = $1;`, categoryID)
+	err = query.Scan(&categoryID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
