@@ -156,10 +156,30 @@ func GetCart(c *fiber.Ctx) error {
 		items = append(items, item)
 	}
 
+	var itemsResponse []views.ItemResponse
+	var found bool
+	for _, item := range items {
+		found = false
+
+		for i, item2 := range itemsResponse {
+			if item.ID == item2.ID {
+				found = true
+				item2.Quantity++
+				itemsResponse[i] = item2
+				break
+			}
+		}
+
+		if found {
+			continue
+		}
+		itemsResponse = append(itemsResponse, item)
+	}
+
 	response := models.Response{
 		Type: models.TypeUserCart,
 		Data: views.CartResponse{
-			Items: items,
+			Items: itemsResponse,
 			Total: total,
 		},
 	}
