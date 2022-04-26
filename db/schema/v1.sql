@@ -71,6 +71,7 @@ CREATE TABLE stores (
     location varchar,
     country varchar,
     access_key varchar,
+    cash_on_delivery BOOLEAN,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (merchant_id) REFERENCES merchants(id)
