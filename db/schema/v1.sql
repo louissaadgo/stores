@@ -228,6 +228,8 @@ CREATE TABLE items_order (
     item_id varchar,
     store_id varchar,
     price float,
+    discounted_price float,
+    status varchar,
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (item_id) REFERENCES items(id),
     FOREIGN KEY (store_id) REFERENCES stores(id)
