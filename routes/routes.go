@@ -55,6 +55,8 @@ func Initialize(app *fiber.App) {
 	//Admin specific routes
 	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
 
+	app.Use("/api/v1/admin/current", controllers.GetCurrentAdmin)
+
 	app.Post("/api/v1/admin/admins/", controllers.CreateAdmin)
 	app.Get("/api/v1/admin/admins/", controllers.GetAllAdmins)
 

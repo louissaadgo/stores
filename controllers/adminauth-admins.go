@@ -135,3 +135,27 @@ func GetAllAdmins(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func GetCurrentAdmin(c *fiber.Ctx) error {
+	row := db.DB.QueryRow(`SELECT id, name, email FROM admins WHERE id = $1;`, c.GetRespHeader("request_user_id"))
+	var admin models.Admin
+	if err := row.Scan(&admin.ID, &admin.Name, &admin.Email); err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	response := models.Response{
+		Type: models.TypeCurrentAdmin,
+		Data: views.CurrentAdmin{
+			Admin: admin,
+		},
+	}
+
+	return c.JSON(response)
+}
