@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/louissaadgo/go-checkif"
 )
 
 type SubCategory struct {
@@ -12,6 +14,12 @@ type SubCategory struct {
 	UpdatedAt  time.Time `json:"updated_at"`
 }
 
-func (admin *SubCategory) Validate() ([]error, bool) {
-	return nil, true
+func (subCategory *SubCategory) Validate() ([]error, bool) {
+	name := checkif.StringObject{Data: subCategory.Name}
+	name.IsLongerThan(1).IsShorterThan(31)
+	if name.IsInvalid {
+		return name.Errors, false
+	}
+
+	return []error{}, true
 }
