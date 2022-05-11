@@ -11,7 +11,7 @@ type Currency struct {
 
 func (currency *Currency) Validate() ([]error, bool) {
 	name := checkif.StringObject{Data: currency.Name}
-	name.IsLongerThan(1).IsShorterThan(21)
+	name.IsLongerThan(1).IsShorterThan(31)
 	if name.IsInvalid {
 		return name.Errors, false
 	}
