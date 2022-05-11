@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/louissaadgo/go-checkif"
 )
 
 type Coupon struct {
@@ -16,6 +18,20 @@ type Coupon struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (admin *Coupon) Validate() ([]error, bool) {
-	return nil, true
+func (coupon *Coupon) Validate() ([]error, bool) {
+	if coupon.Value < 0 {
+		return []error{}, false
+	}
+
+	if coupon.MaxUsage < 0 {
+		return []error{}, false
+	}
+
+	code := checkif.StringObject{Data: coupon.Code}
+	code.IsLongerThan(2).IsShorterThan(16)
+	if code.IsInvalid {
+		return code.Errors, false
+	}
+
+	return []error{}, true
 }
