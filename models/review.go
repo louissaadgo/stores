@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/louissaadgo/go-checkif"
 )
 
 type Review struct {
@@ -15,6 +17,16 @@ type Review struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (admin *Review) Validate() ([]error, bool) {
-	return nil, true
+func (review *Review) Validate() ([]error, bool) {
+	if review.Rating < 0 || review.Rating > 5 {
+		return []error{}, false
+	}
+
+	content := checkif.StringObject{Data: review.Content}
+	content.IsShorterThan(361)
+	if content.IsInvalid {
+		return content.Errors, false
+	}
+
+	return []error{}, true
 }
