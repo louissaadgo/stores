@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/louissaadgo/go-checkif"
 )
 
 type Address struct {
@@ -17,6 +19,30 @@ type Address struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (admin *Address) Validate() ([]error, bool) {
-	return nil, true
+func (address *Address) Validate() ([]error, bool) {
+	name := checkif.StringObject{Data: address.Name}
+	name.IsLongerThan(1).IsShorterThan(31)
+	if name.IsInvalid {
+		return name.Errors, false
+	}
+
+	region := checkif.StringObject{Data: address.Region}
+	region.IsLongerThan(1).IsShorterThan(21)
+	if region.IsInvalid {
+		return region.Errors, false
+	}
+
+	city := checkif.StringObject{Data: address.City}
+	city.IsLongerThan(1).IsShorterThan(21)
+	if city.IsInvalid {
+		return city.Errors, false
+	}
+
+	addressData := checkif.StringObject{Data: address.Address}
+	addressData.IsLongerThan(9).IsShorterThan(361)
+	if addressData.IsInvalid {
+		return addressData.Errors, false
+	}
+
+	return []error{}, true
 }
