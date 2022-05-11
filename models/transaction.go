@@ -12,6 +12,9 @@ type Transaction struct {
 	CreatedAt  time.Time `json:"created_at"`
 }
 
-func (admin *Transaction) Validate() ([]error, bool) {
-	return nil, true
+func (transaction *Transaction) Validate() ([]error, bool) {
+	if transaction.Amount <= 0 {
+		return []error{}, false
+	}
+	return []error{}, true
 }
