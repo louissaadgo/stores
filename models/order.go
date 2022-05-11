@@ -16,6 +16,6 @@ type Order struct {
 	UpdatedAt       time.Time `json:"updated_at"`
 }
 
-func (admin *Order) Validate() ([]error, bool) {
-	return nil, true
+func (order *Order) Validate() ([]error, bool) {
+	return []error{}, true
 }
