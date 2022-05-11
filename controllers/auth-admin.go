@@ -25,17 +25,6 @@ func AdminSignin(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if _, isValid := admin.Validate(); !isValid {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Invalid Data",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
-
 	password := admin.Password
 	query := db.DB.QueryRow(`SELECT id, password FROM admins WHERE email = $1;`, admin.Email)
 	err = query.Scan(&admin.ID, &admin.Password)
