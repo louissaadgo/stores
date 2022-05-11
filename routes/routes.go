@@ -5,9 +5,11 @@ import (
 	"stores/middlewares"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func Initialize(app *fiber.App) {
+	app.Use(cors.New())
 	//Unauthorized routes
 	app.Post("/api/v1/auth/admin/signin", controllers.AdminSignin)
 	app.Post("/api/v1/auth/merchant/signup", controllers.MerchantSignup)
