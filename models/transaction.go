@@ -13,8 +13,5 @@ type Transaction struct {
 }
 
 func (transaction *Transaction) Validate() ([]error, bool) {
-	if transaction.Amount <= 0 {
-		return []error{}, false
-	}
 	return []error{}, true
 }
