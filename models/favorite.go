@@ -6,6 +6,6 @@ type Favorite struct {
 	ItemID string `json:"item_id"`
 }
 
-func (admin *Favorite) Validate() ([]error, bool) {
+func (favorite *Favorite) Validate() ([]error, bool) {
 	return nil, true
 }
