@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/louissaadgo/go-checkif"
 )
 
 type User struct {
@@ -21,6 +23,18 @@ type User struct {
 	UpdatedAt      time.Time `json:"updated_at"`
 }
 
-func (admin *User) Validate() ([]error, bool) {
-	return nil, true
+func (user *User) Validate() ([]error, bool) {
+	name := checkif.StringObject{Data: user.Name}
+	name.IsLongerThan(1).IsShorterThan(31)
+	if name.IsInvalid {
+		return name.Errors, false
+	}
+
+	password := checkif.StringObject{Data: user.Password}
+	password.IsLongerThan(7).IsShorterThan(61).ContainsLowerCaseLetter().ContainsUpperCaseLetter().ContainsNumber()
+	if password.IsInvalid {
+		return password.Errors, false
+	}
+
+	return []error{}, true
 }
