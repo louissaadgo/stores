@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/louissaadgo/go-checkif"
 )
 
 type Merchant struct {
@@ -15,6 +17,24 @@ type Merchant struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (admin *Merchant) Validate() ([]error, bool) {
-	return nil, true
+func (merchant *Merchant) Validate() ([]error, bool) {
+	name := checkif.StringObject{Data: merchant.Name}
+	name.IsLongerThan(1).IsShorterThan(26)
+	if name.IsInvalid {
+		return name.Errors, false
+	}
+
+	email := checkif.StringObject{Data: merchant.Email}
+	email.IsEmail()
+	if email.IsInvalid {
+		return email.Errors, false
+	}
+
+	password := checkif.StringObject{Data: merchant.Password}
+	password.IsLongerThan(7).IsShorterThan(61).ContainsLowerCaseLetter().ContainsUpperCaseLetter().ContainsNumber()
+	if password.IsInvalid {
+		return password.Errors, false
+	}
+
+	return []error{}, true
 }
