@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/louissaadgo/go-checkif"
 )
 
 type Attribute struct {
@@ -11,6 +13,12 @@ type Attribute struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (admin *Attribute) Validate() ([]error, bool) {
-	return nil, true
+func (attribute *Attribute) Validate() ([]error, bool) {
+	name := checkif.StringObject{Data: attribute.Name}
+	name.IsLongerThan(1).IsShorterThan(21)
+	if name.IsInvalid {
+		return name.Errors, false
+	}
+
+	return []error{}, true
 }
