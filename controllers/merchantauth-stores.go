@@ -62,8 +62,8 @@ func CreateStore(c *fiber.Ctx) error {
 	store.AccessKey = uuid.New().String()
 	store.MerchantID = c.GetRespHeader("request_user_id")
 
-	_, err = db.DB.Exec(`INSERT INTO stores(id, merchant_id, name, description, phone, location, country, created_at, updated_at, access_key)
-	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`, store.ID, store.MerchantID, store.Name, store.Description, store.Phone, store.Location, store.Country, store.CreatedAt, store.UpdatedAt, store.AccessKey)
+	_, err = db.DB.Exec(`INSERT INTO stores(id, merchant_id, name, description, phone, location, country, created_at, updated_at, access_key, cash_on_delivery)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`, store.ID, store.MerchantID, store.Name, store.Description, store.Phone, store.Location, store.Country, store.CreatedAt, store.UpdatedAt, store.AccessKey, store.CashOnDelivery)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -137,7 +137,7 @@ func UpdateStore(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	_, err = db.DB.Exec(`UPDATE stores SET description = $1, phone = $2, location = $3, country = $4, updated_at = $5 WHERE id = $6;`, store.Description, store.Phone, store.Location, store.Country, time.Now().UTC(), id)
+	_, err = db.DB.Exec(`UPDATE stores SET description = $1, phone = $2, location = $3, country = $4, updated_at = $5, cash_on_delivery = $6 WHERE id = $7;`, store.Description, store.Phone, store.Location, store.Country, time.Now().UTC(), store.CashOnDelivery, id)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
