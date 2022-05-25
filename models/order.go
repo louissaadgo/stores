@@ -12,6 +12,7 @@ type Order struct {
 	UserID          string    `json:"user_id"`
 	AddressID       string    `json:"address_id"`
 	CouponID        string    `json:"coupon_id"`
+	CurrencyID      string    `json:"currency_id"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
 }

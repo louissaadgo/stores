@@ -181,6 +181,7 @@ CREATE TABLE orders (
     user_id varchar,
     coupon_id varchar,
     address_id varchar,
+    currency_id varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (coupon_id) REFERENCES coupons(id),
