@@ -159,17 +159,6 @@ func UserSignin(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if _, isValid := user.Validate(); !isValid {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Invalid Data",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
-
 	password := user.Password
 	signID := user.SignID
 	query := db.DB.QueryRow(`SELECT id, password, sign_id FROM users WHERE phone = $1;`, user.Phone)

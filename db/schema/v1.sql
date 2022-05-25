@@ -183,10 +183,7 @@ CREATE TABLE orders (
     address_id varchar,
     currency_id varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (coupon_id) REFERENCES coupons(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (address_id) REFERENCES addresses(id)
+    updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE favorites (
@@ -232,8 +229,5 @@ CREATE TABLE items_order (
     price float,
     discounted_price float,
     payment varchar,
-    status varchar,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
-    FOREIGN KEY (item_id) REFERENCES items(id),
-    FOREIGN KEY (store_id) REFERENCES stores(id)
+    status varchar
 );

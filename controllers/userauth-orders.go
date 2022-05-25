@@ -47,62 +47,78 @@ func CreateOrder(c *fiber.Ctx) error {
 	order.Status = models.OrderStatusProccessing
 	order.UserID = c.GetRespHeader("request_user_id")
 
-	coupon := models.Coupon{}
-	query := db.DB.QueryRow(`SELECT id, value, type, max_usage, used, end_date FROM coupons WHERE code = $1;`, order.CouponID)
-	err = query.Scan(&coupon.ID, &coupon.Value, &coupon.Type, &coupon.MaxUsage, &coupon.Used, &coupon.EndDate)
-	if err != nil {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Invalid coupon ID",
-			},
+	if !(order.CouponID == "") {
+		coupon := models.Coupon{}
+		query := db.DB.QueryRow(`SELECT id, value, type, max_usage, used, end_date FROM coupons WHERE code = $1;`, order.CouponID)
+		err = query.Scan(&coupon.ID, &coupon.Value, &coupon.Type, &coupon.MaxUsage, &coupon.Used, &coupon.EndDate)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Invalid coupon ID",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
 		}
-		c.Status(400)
-		return c.JSON(response)
-	}
-	order.CouponID = coupon.ID
+		order.CouponID = coupon.ID
 
-	if coupon.Used >= coupon.MaxUsage {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Coupon reached limit usage",
-			},
+		if coupon.Used >= coupon.MaxUsage {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Coupon reached limit usage",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
 		}
-		c.Status(400)
-		return c.JSON(response)
-	}
 
-	if time.Now().After(coupon.EndDate) {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Coupon Date expired",
-			},
+		if time.Now().After(coupon.EndDate) {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Coupon Date expired",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
 		}
-		c.Status(400)
-		return c.JSON(response)
-	}
 
-	_, err = db.DB.Exec(`UPDATE coupons SET used = $1 WHERE id = $2;`, coupon.Used+1, coupon.ID)
-	if err != nil {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Something went wrong please try again",
-			},
+		_, err = db.DB.Exec(`UPDATE coupons SET used = $1 WHERE id = $2;`, coupon.Used+1, coupon.ID)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
 		}
-		c.Status(400)
-		return c.JSON(response)
 	}
 
-	query = db.DB.QueryRow(`SELECT id FROM addresses WHERE id = $1;`, order.AddressID)
+	query := db.DB.QueryRow(`SELECT id FROM addresses WHERE id = $1;`, order.AddressID)
 	err = query.Scan(&order.AddressID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
 				Error: "Invalid address ID",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	var factor float64
+	query = db.DB.QueryRow(`SELECT id, factor FROM currencies WHERE id = $1;`, order.CurrencyID)
+	err = query.Scan(&order.CurrencyID, &factor)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid currency ID",
 			},
 		}
 		c.Status(400)
@@ -124,6 +140,8 @@ func CreateOrder(c *fiber.Ctx) error {
 
 	var items []views.OrderItem
 	var total float64 = 0
+	var totalDiscounted float64 = 0
+	var totalPaidFromWallet float64 = 0
 	var item views.OrderItem
 	//Getting all the items information
 	for rows.Next() {
@@ -152,6 +170,36 @@ func CreateOrder(c *fiber.Ctx) error {
 		items = append(items, item)
 	}
 
+	newRows, err := db.DB.Query(`SELECT amount FROM transactions WHERE currency_id = $1 AND user_id = $2;`, order.CurrencyID, order.UserID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+	defer newRows.Close()
+
+	var totalTransactions float64
+	for newRows.Next() {
+		var transaction float64
+		if err := newRows.Scan(&transaction); err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		totalTransactions += transaction
+	}
+
+	var itemOrders []models.ItemsOrder
 	for _, itemDB := range items {
 		var idDB string
 		for {
@@ -162,8 +210,60 @@ func CreateOrder(c *fiber.Ctx) error {
 				break
 			}
 		}
-		_, err = db.DB.Exec(`INSERT INTO items_order(id, order_id, item_id, store_id, price)
-			VALUES($1, $2, $3, $4, $5);`, idDB, order.ID, itemDB.ID, itemDB.StoreID, itemDB.Price)
+
+		itemDB.Price = item.Price * factor
+		total += itemDB.Price
+
+		discountedPrice := itemDB.Price
+		totalDiscounted += discountedPrice
+
+		var itemOrder models.ItemsOrder
+		itemOrder.ID = idDB
+		itemOrder.OrderID = order.ID
+		itemOrder.ItemID = itemDB.ID
+		itemOrder.StoreID = itemDB.StoreID
+		itemOrder.Price = itemDB.Price
+		itemOrder.DiscountedPrice = discountedPrice
+
+		if totalTransactions-discountedPrice >= 0 {
+			totalTransactions = totalTransactions - discountedPrice
+			totalPaidFromWallet += discountedPrice
+			itemOrder.Payment = models.PaymentWallet
+			itemOrder.Status = models.ItemPaid
+		} else {
+			var cod bool
+			query := db.DB.QueryRow(`SELECT cash_on_delivery FROM stores WHERE id = $1;`, itemDB.StoreID)
+			err := query.Scan(&cod)
+			if err != nil {
+				response := models.Response{
+					Type: models.TypeErrorResponse,
+					Data: views.Error{
+						Error: "Something went wrong please try again",
+					},
+				}
+				c.Status(400)
+				return c.JSON(response)
+			}
+			if !cod {
+				response := models.Response{
+					Type: models.TypeErrorResponse,
+					Data: views.Error{
+						Error: "Insufficient Wallet Balance",
+					},
+				}
+				c.Status(400)
+				return c.JSON(response)
+			}
+			itemOrder.Payment = models.PaymentCOD
+			itemOrder.Status = models.ItemUnpaid
+		}
+
+		itemOrders = append(itemOrders, itemOrder)
+	}
+
+	for _, itemOrder := range itemOrders {
+		_, err = db.DB.Exec(`INSERT INTO items_order(id, order_id, item_id, store_id, price, discounted_price, payment, status)
+			VALUES($1, $2, $3, $4, $5, $6, $7, $8);`, itemOrder.ID, itemOrder.OrderID, itemOrder.ItemID, itemOrder.StoreID, itemOrder.Price, itemOrder.DiscountedPrice, itemOrder.Payment, itemOrder.Status)
 		if err != nil {
 			response := models.Response{
 				Type: models.TypeErrorResponse,
@@ -177,7 +277,33 @@ func CreateOrder(c *fiber.Ctx) error {
 	}
 
 	order.Total = total
-	order.TotalDiscounted = 0
+	order.TotalDiscounted = totalDiscounted
+
+	transaction := models.Transaction{}
+	transaction.UserID = order.UserID
+	transaction.CurrencyID = order.CurrencyID
+	transaction.CreatedAt = time.Now().UTC()
+	for {
+		transaction.ID = uuid.New().String()
+		query := db.DB.QueryRow(`SELECT id FROM transactions WHERE id = $1;`, transaction.ID)
+		err = query.Scan(&transaction.ID)
+		if err != nil {
+			break
+		}
+	}
+
+	_, err = db.DB.Exec(`INSERT INTO transactions(id, user_id, currency_id, amount, created_at)
+	VALUES($1, $2, $3, $4, $5);`, transaction.ID, transaction.UserID, transaction.CurrencyID, -totalPaidFromWallet, transaction.CreatedAt)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
 	// if coupon.Type == models.CouponTypeFixed {
 	// 	order.TotalDiscounted = total - coupon.Value
 	// } else if coupon.Type == models.CouponTypePercentage {
@@ -195,13 +321,13 @@ func CreateOrder(c *fiber.Ctx) error {
 
 	order.CreatedAt = time.Now().UTC()
 	order.UpdatedAt = time.Now().UTC()
-	_, err = db.DB.Exec(`INSERT INTO orders(id, status, total, coupon_id, address_id, user_id, created_at, updated_at, total_discounted)
-			VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9);`, order.ID, order.Status, order.Total, order.CouponID, order.AddressID, order.UserID, order.CreatedAt, order.UpdatedAt, order.TotalDiscounted)
+	_, err = db.DB.Exec(`INSERT INTO orders(id, status, total, coupon_id, address_id, user_id, created_at, updated_at, total_discounted, currency_id)
+			VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`, order.ID, order.Status, order.Total, order.CouponID, order.AddressID, order.UserID, order.CreatedAt, order.UpdatedAt, order.TotalDiscounted, order.CurrencyID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Something went wrong please try again",
+				Error: err.Error(),
 			},
 		}
 		c.Status(400)

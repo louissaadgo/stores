@@ -27,4 +27,8 @@ const (
 	CouponTypeFixed        = "fixed"
 	CouponTypePercentage   = "percentage"
 	OrderStatusProccessing = "proccessing"
+	PaymentWallet          = "wallet"
+	PaymentCOD             = "cash on delivery"
+	ItemPaid               = "paid"
+	ItemUnpaid             = "unpaid"
 )
