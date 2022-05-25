@@ -7,6 +7,7 @@ type ItemsOrder struct {
 	StoreID         string  `json:"store_id"`
 	Price           float64 `json:"price"`
 	DiscountedPrice float64 `json:"discounted_price"`
+	Payment         string  `json:"payment"`
 	Status          string  `json:"status"`
 }
 
