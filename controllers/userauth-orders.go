@@ -170,6 +170,17 @@ func CreateOrder(c *fiber.Ctx) error {
 		items = append(items, item)
 	}
 
+	if len(items) == 0 {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "No items in cart",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
 	newRows, err := db.DB.Query(`SELECT amount FROM transactions WHERE currency_id = $1 AND user_id = $2;`, order.CurrencyID, order.UserID)
 	if err != nil {
 		response := models.Response{
@@ -199,7 +210,11 @@ func CreateOrder(c *fiber.Ctx) error {
 		totalTransactions += transaction
 	}
 
-	var itemOrders []models.ItemsOrder
+	var itemOrdersWallet []models.ItemsOrder
+	var itemOrdersCOD []models.ItemsOrder
+	var totalItemOrders []models.ItemsOrder
+
+	//Categorizing each item
 	for _, itemDB := range items {
 		var idDB string
 		for {
@@ -225,43 +240,62 @@ func CreateOrder(c *fiber.Ctx) error {
 		itemOrder.Price = itemDB.Price
 		itemOrder.DiscountedPrice = discountedPrice
 
-		if totalTransactions-discountedPrice >= 0 {
-			totalTransactions = totalTransactions - discountedPrice
-			totalPaidFromWallet += discountedPrice
-			itemOrder.Payment = models.PaymentWallet
-			itemOrder.Status = models.ItemPaid
-		} else {
-			var cod bool
-			query := db.DB.QueryRow(`SELECT cash_on_delivery FROM stores WHERE id = $1;`, itemDB.StoreID)
-			err := query.Scan(&cod)
-			if err != nil {
-				response := models.Response{
-					Type: models.TypeErrorResponse,
-					Data: views.Error{
-						Error: "Something went wrong please try again",
-					},
-				}
-				c.Status(400)
-				return c.JSON(response)
+		var cod bool
+		query := db.DB.QueryRow(`SELECT cash_on_delivery FROM stores WHERE id = $1;`, itemDB.StoreID)
+		err := query.Scan(&cod)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
 			}
-			if !cod {
-				response := models.Response{
-					Type: models.TypeErrorResponse,
-					Data: views.Error{
-						Error: "Insufficient Wallet Balance",
-					},
-				}
-				c.Status(400)
-				return c.JSON(response)
-			}
-			itemOrder.Payment = models.PaymentCOD
-			itemOrder.Status = models.ItemUnpaid
+			c.Status(400)
+			return c.JSON(response)
 		}
-
-		itemOrders = append(itemOrders, itemOrder)
+		if cod {
+			itemOrdersCOD = append(itemOrdersCOD, itemOrder)
+		} else {
+			itemOrdersWallet = append(itemOrdersWallet, itemOrder)
+		}
 	}
 
-	for _, itemOrder := range itemOrders {
+	//Checking Sufficiant wallet balance for Wallet items
+	for _, item := range itemOrdersWallet {
+		if totalTransactions-item.DiscountedPrice >= 0 {
+			totalTransactions = totalTransactions - item.DiscountedPrice
+			totalPaidFromWallet += item.DiscountedPrice
+			item.Payment = models.PaymentWallet
+			item.Status = models.ItemPaid
+			totalItemOrders = append(totalItemOrders, item)
+		} else {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Insufficient wallet balance",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+	}
+
+	//Checking Sufficiant wallet balance for COD items
+	for _, item := range itemOrdersCOD {
+		if totalTransactions-item.DiscountedPrice >= 0 {
+			totalTransactions = totalTransactions - item.DiscountedPrice
+			totalPaidFromWallet += item.DiscountedPrice
+			item.Payment = models.PaymentWallet
+			item.Status = models.ItemPaid
+			totalItemOrders = append(totalItemOrders, item)
+		} else {
+			item.Payment = models.PaymentCOD
+			item.Status = models.ItemUnpaid
+			totalItemOrders = append(totalItemOrders, item)
+		}
+	}
+
+	for _, itemOrder := range totalItemOrders {
 		_, err = db.DB.Exec(`INSERT INTO items_order(id, order_id, item_id, store_id, price, discounted_price, payment, status)
 			VALUES($1, $2, $3, $4, $5, $6, $7, $8);`, itemOrder.ID, itemOrder.OrderID, itemOrder.ItemID, itemOrder.StoreID, itemOrder.Price, itemOrder.DiscountedPrice, itemOrder.Payment, itemOrder.Status)
 		if err != nil {
