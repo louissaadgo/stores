@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 	"stores/db"
+	"stores/emailing"
 	"stores/models"
 	"stores/token"
 	"stores/views"
@@ -125,6 +127,10 @@ func MerchantSignup(c *fiber.Ctx) error {
 			AuthToken: token,
 		},
 	}
+
+	subject := fmt.Sprintf("Welcome %v", merchant.Name)
+	message := fmt.Sprintf("Welcome to Aswak, %v.\nYou have been successfully registered as a merchant.", merchant.Name)
+	go emailing.SendEmail(merchant.Email, subject, message)
 
 	return c.JSON(response)
 }

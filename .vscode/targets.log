@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu May 26 08:06:29 2022
+# Make data base, printed on Thu Jun  2 09:08:45 2022
 
 # Variables
 
@@ -53,7 +53,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:47138
+JOURNAL_STREAM = 8:44603
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-zorin:/etc/xdg
 # environment
@@ -83,7 +83,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:
 # environment
-MANAGERPID = 1203
+MANAGERPID = 1180
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -103,7 +103,7 @@ PATH = /home/louisgo/anaconda3/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbre
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/2358,unix/louisgo:/tmp/.ICE-unix/2358
+SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/1948,unix/louisgo:/tmp/.ICE-unix/1948
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -121,15 +121,10 @@ VSCODE_LOG_STACK = false
 # environment
 DISABLE_WAYLAND = 1
 # environment
- 
 ELECTRON_RUN_AS_NODE = 1
- 
 # environment
- 
-INVOCATION_ID = c993bfd7f4d440f5855b4e2830173471
- 
+INVOCATION_ID = 2234e3f838d5430788983b9699ba6b77
 # environment
- 
 GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
@@ -154,7 +149,7 @@ QT_QPA_PLATFORMTHEME = gtk3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2007
+SSH_AGENT_PID = 1709
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = zorin:GNOME
 # environment
@@ -212,7 +207,7 @@ SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = zorin
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-9f2edfd2-b9e1-49c1-b0df-fa2608a08502.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-7373827f-d3fd-47b8-a688-29dedd082573.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -278,11 +273,12 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/16d48d2c_af2d_4bc6_9f24_f2461f9fa607
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/b1cc3286_61db_4c2a_a3eb_fdc5820c2209
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.110
+ 
+GNOME_TERMINAL_SERVICE = :1.288
 # default
 SUFFIXES := 
 # environment
@@ -304,7 +300,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 12212
+VSCODE_PID = 14716
 # variable set hash-table stats:
 # Load=144/1024=14%, Rehash=0, Collisions=23/169=14%
 
@@ -314,9 +310,9 @@ VSCODE_PID = 12212
 
 # Directories
 
-# . (device 2050, inode 13635890): 17 files, no impossibilities.
+# . (device 2050, inode 13635890): 18 files, no impossibilities.
 
-# 17 files, no impossibilities in 1 directories.
+# 18 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -359,12 +355,12 @@ run:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 23 / storage = 175 B / avg = 7 B
-# current buf: size = 8162 B / used = 175 B / count = 23 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 24 / storage = 184 B / avg = 7 B
+# current buf: size = 8162 B / used = 184 B / count = 24 / avg = 7 B
 
-# strcache performance: lookups = 28 / hit rate = 17%
+# strcache performance: lookups = 29 / hit rate = 17%
 # hash-table stats:
-# Load=23/8192=0%, Rehash=0, Collisions=1/28=4%
-# Finished Make data base on Thu May 26 08:06:29 2022
+# Load=24/8192=0%, Rehash=0, Collisions=1/29=3%
+# Finished Make data base on Thu Jun  2 09:08:45 2022
 
  
