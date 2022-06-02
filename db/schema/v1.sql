@@ -231,3 +231,9 @@ CREATE TABLE items_order (
     payment varchar,
     status varchar
 );
+
+CREATE TABLE item_images (
+    id varchar PRIMARY KEY,
+    source varchar,
+    item_id varchar
+);
