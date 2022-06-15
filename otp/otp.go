@@ -21,7 +21,7 @@ func GenerateRandomNumber() string {
 
 func SendOTP(num string) bool {
 	sID := "AC39800ef0c1c4f02524b323c0fe7fd9cd"
-	authToken := "0ec841e45af6ca6eb9cb605b3da7edaa"
+	authToken := "6abacb37aee9de1cdc62f80aa03e7337"
 	urlStr := "https://api.twilio.com/2010-04-01/Accounts/" + sID + "/Messages.json"
 
 	msgData := url.Values{}
@@ -36,13 +36,9 @@ func SendOTP(num string) bool {
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := client.Do(req)
+	_, err := client.Do(req)
 	if err != nil {
 		return false
 	}
-	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
-		return true
-	} else {
-		return false
-	}
+	return true
 }
