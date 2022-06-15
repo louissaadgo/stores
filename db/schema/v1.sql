@@ -196,14 +196,14 @@ CREATE TABLE favorites (
 CREATE TABLE reviews (
     id varchar PRIMARY KEY,
     user_id varchar,
-    store_id varchar,
+    item_id varchar,
     order_id varchar,
     rating int,
     content varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (store_id) REFERENCES stores(id),
+    FOREIGN KEY (item_id) REFERENCES items(id),
     FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 

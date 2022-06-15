@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Jun 15 07:54:34 2022
+# Make data base, printed on Wed Jun 15 09:23:51 2022
 
 # Variables
 
@@ -75,6 +75,8 @@ MANDATORY_PATH = /usr/share/gconf/zorin.mandatory.path
 # environment
 XDG_DATA_DIRS = /usr/share/zorin:/home/louisgo/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
@@ -88,6 +90,8 @@ LESSOPEN = | /usr/bin/lesspipe %s
 LC_NAME = en_US.UTF-8
 # environment
 VSCODE_CWD = /home/louisgo/go/github.com/louissaadgo/stores
+# environment
+GOPROXY = https://proxy.golang.org,direct
 # environment
 QT_STYLE_OVERRIDE = adwaita
 # environment
@@ -106,6 +110,8 @@ XDG_RUNTIME_DIR = /run/user/1000
 GDK_PIXBUF_MODULE_FILE = /home/louisgo/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
 SNAP = /snap/code/98
+# environment
+GOPATH = /home/louisgo/go
 # environment
 SNAP_VERSION = 4af164ea
 # environment
@@ -146,13 +152,12 @@ QT_QPA_PLATFORMTHEME = gtk3
 SSH_AGENT_PID = 1931
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = zorin:GNOME
- 
 # environment
 GTK_MODULES = gail:atk-bridge
 # environment
 MANPATH = /home/linuxbrew/.linuxbrew/share/man:
 # environment
-VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+GOMODCACHE = /home/louisgo/go/pkg/mod
 # environment
 HOME = /home/louisgo
 # environment
@@ -202,7 +207,7 @@ SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = zorin
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-be9e80e0-b76c-4f50-ad0c-663deb47564e.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-40e9c3ed-32de-47be-a861-5bc664181275.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -268,14 +273,14 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/35e4d278_51bb_46dd_afd1_493442223478
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/98486577_6b21_4a6b_8e7b_463e38d506f8
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.94
+ 
+GNOME_TERMINAL_SERVICE = :1.384
 # default
 SUFFIXES := 
- 
 # environment
 SNAP_REEXEC = 
 # environment
@@ -295,9 +300,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 5380
+VSCODE_PID = 14163
 # variable set hash-table stats:
-# Load=141/1024=14%, Rehash=0, Collisions=22/166=13%
+# Load=144/1024=14%, Rehash=0, Collisions=23/169=14%
 
 # Pattern-specific Variable Values
 
@@ -305,9 +310,9 @@ VSCODE_PID = 5380
 
 # Directories
 
-# . (device 2050, inode 13635890): 20 files, no impossibilities.
+# . (device 2050, inode 13635890): 21 files, no impossibilities.
 
-# 20 files, no impossibilities in 1 directories.
+# 21 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -350,13 +355,12 @@ run:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 26 / storage = 199 B / avg = 7 B
-# current buf: size = 8162 B / used = 199 B / count = 26 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 27 / storage = 203 B / avg = 7 B
+# current buf: size = 8162 B / used = 203 B / count = 27 / avg = 7 B
 
-# strcache performance: lookups = 31 / hit rate = 16%
+# strcache performance: lookups = 32 / hit rate = 15%
 # hash-table stats:
- 
-# Load=26/8192=0%, Rehash=0, Collisions=1/31=3%
-# Finished Make data base on Wed Jun 15 07:54:34 2022
+# Load=27/8192=0%, Rehash=0, Collisions=1/32=3%
+# Finished Make data base on Wed Jun 15 09:23:51 2022
 
  
