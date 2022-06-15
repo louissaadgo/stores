@@ -1,7 +1,6 @@
 package otp
 
 import (
-	"encoding/json"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -39,15 +38,8 @@ func SendOTP(num string) bool {
 
 	resp, _ := client.Do(req)
 	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
-		var data map[string]interface{}
-		decoder := json.NewDecoder(resp.Body)
-		err := decoder.Decode(&data)
-		if err == nil {
-			fmt.Println(data["sid"])
-		}
+		return true
 	} else {
-		fmt.Println(resp.Status)
+		return false
 	}
-
-	return true
 }
