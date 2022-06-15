@@ -36,7 +36,10 @@ func SendOTP(num string) bool {
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, _ := client.Do(req)
+	resp, err := client.Do(req)
+	if err != nil {
+		return false
+	}
 	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
 		return true
 	} else {
