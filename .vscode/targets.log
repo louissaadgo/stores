@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Jun 14 10:50:35 2022
+# Make data base, printed on Wed Jun 15 07:54:34 2022
 
 # Variables
 
@@ -53,7 +53,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:45826
+JOURNAL_STREAM = 8:46187
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-zorin:/etc/xdg
 # environment
@@ -81,7 +81,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:
 # environment
-MANAGERPID = 1319
+MANAGERPID = 1177
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -117,7 +117,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 418fa9cecc1c4751b44ae6f90f76952e
+INVOCATION_ID = 0c41755e408347b0978956887cc47fd9
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/98/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -143,9 +143,10 @@ QT_QPA_PLATFORMTHEME = gtk3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1953
+SSH_AGENT_PID = 1931
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = zorin:GNOME
+ 
 # environment
 GTK_MODULES = gail:atk-bridge
 # environment
@@ -201,7 +202,7 @@ SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = zorin
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-fb144941-53ed-42c2-9025-86412e9d24ad.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-be9e80e0-b76c-4f50-ad0c-663deb47564e.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -267,13 +268,14 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9739d32b_d144_4078_bd07_10ae1e90545e
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/35e4d278_51bb_46dd_afd1_493442223478
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.112
+GNOME_TERMINAL_SERVICE = :1.94
 # default
 SUFFIXES := 
+ 
 # environment
 SNAP_REEXEC = 
 # environment
@@ -293,7 +295,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 8072
+VSCODE_PID = 5380
 # variable set hash-table stats:
 # Load=141/1024=14%, Rehash=0, Collisions=22/166=13%
 
@@ -353,7 +355,8 @@ run:
 
 # strcache performance: lookups = 31 / hit rate = 16%
 # hash-table stats:
+ 
 # Load=26/8192=0%, Rehash=0, Collisions=1/31=3%
-# Finished Make data base on Tue Jun 14 10:50:35 2022
+# Finished Make data base on Wed Jun 15 07:54:34 2022
 
  
