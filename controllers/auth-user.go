@@ -136,8 +136,15 @@ func UserSignup(c *fiber.Ctx) error {
 
 	response := models.Response{
 		Type: models.TypeAuthResponse,
-		Data: views.Auth{
+		Data: views.UserAuth{
 			AuthToken: token,
+			UserData: views.UserAuthData{
+				Name:    user.Name,
+				Phone:   user.Phone,
+				Country: user.Country,
+				Status:  user.Status,
+				Image:   user.Image,
+			},
 		},
 	}
 
