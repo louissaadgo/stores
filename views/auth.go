@@ -1,15 +1,13 @@
 package views
 
-type Auth struct {
-	AuthToken string `json:"auth_token"`
-}
-
 type UserAuthData struct {
-	Name    string `json:"name"`
-	Phone   string `json:"phone"`
-	Country string `json:"country"`
-	Status  string `json:"status"`
-	Image   string `json:"image"`
+	Name          string `json:"name"`
+	Phone         string `json:"phone"`
+	Country       string `json:"country"`
+	Status        string `json:"status"`
+	Email         string `json:"email"`
+	VerifiedEmail bool   `json:"verified_email"`
+	VerifiedPhone bool   `json:"verified_phone"`
 }
 
 type UserAuth struct {

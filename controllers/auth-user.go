@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"stores/db"
+	"stores/emailing"
 	"stores/models"
 	"stores/token"
 	"stores/views"
@@ -59,57 +60,36 @@ func UserSignup(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if user.SignType == models.SignTypeNative {
-		hashedPassword, isValid := HashPassword(user.Password)
-		if !isValid {
-			response := models.Response{
-				Type: models.TypeErrorResponse,
-				Data: views.Error{
-					Error: "Something went wrong please try again",
-				},
-			}
-			c.Status(400)
-			return c.JSON(response)
-		}
-		user.Password = hashedPassword
-		user.SignID = ""
-	} else if user.SignType == models.SignTypeParty {
-		user.Password = ""
-	} else {
+	query = db.DB.QueryRow(`SELECT email FROM users WHERE email = $1;`, user.Email)
+	err = query.Scan(&user.Email)
+	if err == nil || err != sql.ErrNoRows {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "invalid sign_type",
+				Error: "email already exists",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
+
+	hashedPassword, _ := HashPassword(user.Password)
+	user.Password = hashedPassword
 	user.Status = models.UserStatusActive
-	user.LoyalityPoints = 0
+	user.VerifiedEmail = false
+	user.VerifiedPhone = false
 	user.CreatedAt = time.Now().UTC()
 	user.UpdatedAt = time.Now().UTC()
 
 	tokenID := uuid.New().String()
 
-	_, err = db.DB.Exec(`INSERT INTO users(id, name, phone, password, sign_type, sign_id, bday, image, country, status, loyality_points, created_at, updated_at, token_id)
-	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);`, user.ID, user.Name, user.Phone, user.Password, user.SignType, user.SignID, user.Bday, user.Image, user.Country, user.Status, user.LoyalityPoints, user.CreatedAt, user.UpdatedAt, tokenID)
+	_, err = db.DB.Exec(`INSERT INTO users(id, name, phone, verified_phone, email, verified_email, password, token_id, country, status, created_at, updated_at)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`, user.ID, user.Name, user.Phone, user.VerifiedPhone, user.Email, user.VerifiedEmail, user.Password, user.TokenID, user.Country, user.Status, user.CreatedAt, user.UpdatedAt)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Something went wrong please try again",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
-
-	if tokenID == "" {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Something went wrong please try again",
+				Error: "Error occured while inserting into db",
 			},
 		}
 		c.Status(400)
@@ -139,14 +119,18 @@ func UserSignup(c *fiber.Ctx) error {
 		Data: views.UserAuth{
 			AuthToken: token,
 			UserData: views.UserAuthData{
-				Name:    user.Name,
-				Phone:   user.Phone,
-				Country: user.Country,
-				Status:  user.Status,
-				Image:   user.Image,
+				Name:          user.Name,
+				Phone:         user.Phone,
+				Country:       user.Country,
+				Status:        user.Status,
+				Email:         user.Email,
+				VerifiedEmail: user.VerifiedEmail,
+				VerifiedPhone: user.VerifiedPhone,
 			},
 		},
 	}
+
+	emailing.SendEmail(user.Email, "Welcome to Aswak", "Hi "+user.Name+", welcome to aswak!!")
 
 	return c.JSON(response)
 }
@@ -167,9 +151,9 @@ func UserSignin(c *fiber.Ctx) error {
 	}
 
 	password := user.Password
-	signID := user.SignID
-	query := db.DB.QueryRow(`SELECT id, password, sign_id FROM users WHERE phone = $1;`, user.Phone)
-	err = query.Scan(&user.ID, &user.Password, &user.SignID)
+
+	query := db.DB.QueryRow(`SELECT id, password, email, name, phone, country, status, verified_email, verified_phone FROM users WHERE phone = $1;`, user.Phone)
+	err = query.Scan(&user.ID, &user.Password, &user.Email, &user.Name, &user.Phone, &user.Country, &user.Status, &user.VerifiedEmail, &user.VerifiedPhone)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -181,33 +165,11 @@ func UserSignin(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if user.SignType == models.SignTypeNative {
-		if isValid := ValidatePassword(password, user.Password); !isValid {
-			response := models.Response{
-				Type: models.TypeErrorResponse,
-				Data: views.Error{
-					Error: "Invalid Credentials",
-				},
-			}
-			c.Status(400)
-			return c.JSON(response)
-		}
-	} else if user.SignType == models.SignTypeParty {
-		if signID != user.SignID {
-			response := models.Response{
-				Type: models.TypeErrorResponse,
-				Data: views.Error{
-					Error: "Invalid Credentials",
-				},
-			}
-			c.Status(400)
-			return c.JSON(response)
-		}
-	} else {
+	if isValid := ValidatePassword(password, user.Password); !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Invalid sign_type",
+				Error: "Invalid Credentials",
 			},
 		}
 		c.Status(400)
@@ -225,12 +187,13 @@ func UserSignin(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
+
 	_, err = db.DB.Exec(`UPDATE users SET token_id = $1 WHERE id = $2;`, tokenID, user.ID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Something went wrong please try again",
+				Error: "Error modifying token_id",
 			},
 		}
 		c.Status(400)
@@ -242,7 +205,7 @@ func UserSignin(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Something went wrong please try again",
+				Error: "error while generating paseto token",
 			},
 		}
 		c.Status(400)
@@ -257,8 +220,17 @@ func UserSignin(c *fiber.Ctx) error {
 
 	response := models.Response{
 		Type: models.TypeAuthResponse,
-		Data: views.Auth{
+		Data: views.UserAuth{
 			AuthToken: token,
+			UserData: views.UserAuthData{
+				Name:          user.Name,
+				Phone:         user.Phone,
+				Country:       user.Country,
+				Status:        user.Status,
+				Email:         user.Email,
+				VerifiedEmail: user.VerifiedEmail,
+				VerifiedPhone: user.VerifiedPhone,
+			},
 		},
 	}
 

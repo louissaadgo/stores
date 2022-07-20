@@ -1,16 +1,14 @@
 CREATE TABLE users (
     id varchar PRIMARY KEY,
-    phone varchar,
     name varchar,
-    token_id varchar,
+    phone varchar,
+    verified_phone BOOLEAN,
+    email varchar,
+    verified_email BOOLEAN,
     password varchar,
-    sign_type varchar,
-    sign_id varchar,
-    status varchar,
-    bday  TIMESTAMP WITH TIME ZONE,
-    image varchar,
+    token_id varchar,
     country varchar,
-    loyality_points int,
+    status varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE
 );
@@ -30,7 +28,7 @@ CREATE TABLE addresses (
 );
 
 CREATE TABLE admins (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name varchar,
     email varchar,
     token_id varchar,
@@ -40,7 +38,7 @@ CREATE TABLE admins (
 );
 
 CREATE TABLE merchants (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     email varchar,
     status varchar,
     token_id varchar,
@@ -64,7 +62,7 @@ CREATE TABLE coupons (
 
 CREATE TABLE stores (
     id varchar PRIMARY KEY,
-    merchant_id varchar,
+    merchant_id int,
     name varchar,
     description varchar,
     phone varchar,
@@ -73,8 +71,7 @@ CREATE TABLE stores (
     access_key varchar,
     cash_on_delivery BOOLEAN,
     created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (merchant_id) REFERENCES merchants(id)
+    updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE links (
@@ -154,13 +151,6 @@ CREATE TABLE items (
     FOREIGN KEY (store_id) REFERENCES stores(id),
     FOREIGN KEY (category_id) REFERENCES categories(id),
     FOREIGN KEY (subcategory_id) REFERENCES subcategories(id)
-);
-
-CREATE TABLE item_images (
-    id varchar PRIMARY KEY,
-    item_id varchar,
-    url varchar,
-    FOREIGN KEY (item_id) REFERENCES items(id)
 );
 
 CREATE TABLE selected_attributes (

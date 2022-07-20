@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jul  7 08:12:56 2022
+# Make data base, printed on Wed Jul 20 08:55:12 2022
 
 # Variables
 
@@ -30,8 +30,6 @@ XDG_SESSION_CLASS = user
 SNAP_COMMON = /var/snap/code/common
 # environment
 XDG_SESSION_TYPE = x11
-# environment
-VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -47,13 +45,15 @@ CURDIR := /home/louisgo/go/github.com/louissaadgo/stores
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/99
+SNAP_DATA = /var/snap/code/102
 # environment
 VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:48756
+JOURNAL_STREAM = 8:48579
+# environment
+DB_CONNECTION = postgres://postgres:2400@localhost/zealouss?sslmode=disable
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-zorin:/etc/xdg
 # environment
@@ -79,12 +79,9 @@ VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-VSCODE_VERBOSE_LOGGING = true
-# environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:
 # environment
-MANAGERPID = 1435
- 
+MANAGERPID = 1419
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -96,37 +93,39 @@ GOPROXY = https://proxy.golang.org,direct
 # environment
 QT_STYLE_OVERRIDE = adwaita
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/99/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/102/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
 PATH = /home/louisgo/anaconda3/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/usr/local/go/bin
 # environment
+PASETO_KEY = 0123456789zealoussio012345678924
+# environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/2069,unix/louisgo:/tmp/.ICE-unix/2069
+GJS_DEBUG_OUTPUT = stderr
+# environment
+SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/2221,unix/louisgo:/tmp/.ICE-unix/2221
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/louisgo/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/99
+SNAP = /snap/code/102
 # environment
 GOPATH = /home/louisgo/go
 # environment
-SNAP_VERSION = 30d9c6cd
+SNAP_VERSION = 3b889b09
 # environment
 XDG_MENU_PREFIX = gnome-
-# environment
-VSCODE_LOG_STACK = false
 # environment
 DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 53a789d9a76e4d7a8e42d2d39fd550a6
+INVOCATION_ID = 7349435100354d69b08779b38b467a57
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/99/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/102/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -140,8 +139,6 @@ SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
 DISPLAY = :0
 # environment
-VSCODE_PIPE_LOGGING = true
-# environment
 SNAP_INSTANCE_KEY = 
 # environment
 PWD = /home/louisgo/go/github.com/louissaadgo/stores
@@ -150,11 +147,10 @@ QT_QPA_PLATFORMTHEME = gtk3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2007
+SSH_AGENT_PID = 1825
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = zorin:GNOME
 # environment
- 
 GTK_MODULES = gail:atk-bridge
 # environment
 MANPATH = /home/linuxbrew/.linuxbrew/share/man:
@@ -163,15 +159,17 @@ GOMODCACHE = /home/louisgo/go/pkg/mod
 # environment
 HOME = /home/louisgo
 # environment
+INSIDE_NAUTILUS_PYTHON = 
+# environment
 HOMEBREW_CELLAR = /home/linuxbrew/.linuxbrew/Cellar
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/louisgo/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CODE_CACHE_PATH = /home/louisgo/.config/Code/CachedData/3b889b090b5ad5793f524b5d1d39fda662b96a2a
 # environment
 LOGNAME = louisgo
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # environment
@@ -203,19 +201,19 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/louisgo/snap/code/99
+SNAP_USER_DATA = /home/louisgo/snap/code/102
 # environment
 SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = zorin
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-b3287b8c-6068-4906-856f-0e1d9f3b7dfd.sock
+AMAZON_SES_USER = AKIAULBWLI45QZ4UCSHI
 # default
 MAKE_VERSION := 4.2.1
 # environment
 USER = louisgo
 # environment
-SNAP_REVISION = 99
+SNAP_REVISION = 102
 # environment
 LC_MONETARY = en_US.UTF-8
 # makefile
@@ -226,7 +224,6 @@ XDG_CURRENT_DESKTOP = zorin:GNOME
 %D = $(patsubst %/,%,$(dir $%))
 # environment
 LC_TELEPHONE = en_US.UTF-8
- 
 # default
 MAKE_COMMAND := make
 # environment
@@ -236,7 +233,7 @@ OLDPWD = /home/louisgo
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-4243ec2b-1.68.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-4243ec2b-1.69.2-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -252,13 +249,17 @@ GDK_BACKEND = x11
 # environment
 LC_PAPER = en_US.UTF-8
 # environment
-LC_IDENTIFICATION = en_US.UTF-8
+NO_AT_BRIDGE = 1
 # environment
 HOMEBREW_REPOSITORY = /home/linuxbrew/.linuxbrew/Homebrew
 # environment
 QT_ACCESSIBILITY = 1
 # environment
 DEFAULTS_PATH = /usr/share/gconf/zorin.default.path
+# environment
+AMAZON_SES_PORT = 587
+# environment
+AMAZON_SES_SERVER = email-smtp.us-east-1.amazonaws.com
 # default
 MAKEFILES := 
 # environment
@@ -269,19 +270,23 @@ LC_NUMERIC = en_US.UTF-8
 <F = $(notdir $<)
 # environment
 LC_MEASUREMENT = en_US.UTF-8
- 
 # environment
 SNAP_NAME = code
 # environment
+BCRYPT_COST = 5
+# environment
 LC_ALL = C
+# environment
+DBUS_STARTER_BUS_TYPE = session
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/6876f3d5_ddde_4329_8cd8_220eb327d489
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/44398e54_178d_4dee_9eea_e51b18ecbff7
 # automatic
 ^F = $(notdir $^)
+ 
 # environment
-GNOME_TERMINAL_SERVICE = :1.108
+GNOME_TERMINAL_SERVICE = :1.223
 # default
 SUFFIXES := 
 # environment
@@ -293,21 +298,23 @@ WINDOWPATH = 2
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
-GJS_DEBUG_OUTPUT = stderr
- 
+LC_IDENTIFICATION = en_US.UTF-8
 # default
 .RECIPEPREFIX := 
 # environment
 LC_ADDRESS = en_US.UTF-8
 # environment
+AMAZON_SES_KEY = BLDRaxO9QDap+k8wHxdYgEKN7TgO8x+AQALXZ8dQwBKK
+# environment
 LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 6596
+VSCODE_PID = 9197
+# environment
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=2afa9f96c4635c938993a6a662d78a1d
 # variable set hash-table stats:
- 
-# Load=144/1024=14%, Rehash=0, Collisions=23/169=14%
+# Load=150/1024=15%, Rehash=0, Collisions=22/175=13%
 
 # Pattern-specific Variable Values
 
@@ -315,7 +322,6 @@ VSCODE_PID = 6596
 
 # Directories
 
- 
 # . (device 2050, inode 13635890): 21 files, no impossibilities.
 
 # 21 files, no impossibilities in 1 directories.
@@ -367,6 +373,6 @@ run:
 # strcache performance: lookups = 32 / hit rate = 15%
 # hash-table stats:
 # Load=27/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Thu Jul  7 08:12:56 2022
+# Finished Make data base on Wed Jul 20 08:55:12 2022
 
  

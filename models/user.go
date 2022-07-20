@@ -7,20 +7,18 @@ import (
 )
 
 type User struct {
-	ID             string    `json:"id"`
-	Name           string    `json:"name"`
-	Phone          string    `json:"phone"`
-	Password       string    `json:"password"`
-	SignType       string    `json:"sign_type"`
-	SignID         string    `json:"sign_id"`
-	TokenID        string    `json:"token_id"`
-	Bday           time.Time `json:"bday"`
-	Image          string    `json:"image"`
-	Country        string    `json:"country"`
-	Status         string    `json:"status"`
-	LoyalityPoints int       `json:"loyality_points"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
+	ID            string    `json:"id"`
+	Name          string    `json:"name"`
+	Phone         string    `json:"phone"`
+	VerifiedPhone bool      `json:"verified_phone"`
+	Email         string    `json:"email"`
+	VerifiedEmail bool      `json:"verified_email"`
+	Password      string    `json:"password"`
+	TokenID       string    `json:"token_id"`
+	Country       string    `json:"country"`
+	Status        string    `json:"status"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
 }
 
 func (user *User) Validate() ([]error, bool) {
@@ -34,6 +32,12 @@ func (user *User) Validate() ([]error, bool) {
 	password.IsLongerThan(7).IsShorterThan(61).ContainsLowerCaseLetter().ContainsUpperCaseLetter().ContainsNumber()
 	if password.IsInvalid {
 		return password.Errors, false
+	}
+
+	email := checkif.StringObject{Data: user.Email}
+	email.IsEmail()
+	if email.IsInvalid {
+		return email.Errors, false
 	}
 
 	return []error{}, true
