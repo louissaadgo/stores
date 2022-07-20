@@ -12,7 +12,7 @@ var (
 )
 
 func InitializeDB() (error, bool) {
-	DB, ErrorDB = sql.Open("postgres", "postgres://postgres:2400@localhost/stores?sslmode=disable")
+	DB, ErrorDB = sql.Open("postgres", "postgres://postgres:2400@localhost/aswak?sslmode=disable")
 	if ErrorDB != nil {
 		return ErrorDB, false
 	}

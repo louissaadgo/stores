@@ -13,7 +13,7 @@ const (
 	key = "01234567890123456789012345678924"
 )
 
-func GeneratePasetoToken(id, userID, userType string) (string, error) {
+func GeneratePasetoToken(id string, userID int, userType string) (string, error) {
 
 	if len(key) != chacha20poly1305.KeySize {
 		return "", fmt.Errorf("key error")

@@ -14,3 +14,7 @@ type UserAuth struct {
 	AuthToken string       `json:"auth_token"`
 	UserData  UserAuthData `json:"user_data"`
 }
+
+type AuthWeb struct {
+	AuthToken string `json:"auth_token"`
+}

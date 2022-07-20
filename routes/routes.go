@@ -2,7 +2,6 @@ package routes
 
 import (
 	"stores/controllers"
-	"stores/middlewares"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -11,17 +10,18 @@ import (
 func Initialize(app *fiber.App) {
 	app.Use(cors.New())
 	//Unauthorized routes
+	app.Post("/api/v1/auth/web/signup", controllers.MerchantSignup)
 	// app.Post("/api/v1/auth/admin/signin", controllers.AdminSignin)
 	// app.Post("/api/v1/auth/merchant/signup", controllers.MerchantSignup)
 	// app.Post("/api/v1/auth/merchant/signin", controllers.MerchantSignin)
-	app.Post("/api/v1/auth/user/signup", controllers.UserSignup)
-	app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
+	// app.Post("/api/v1/auth/user/signup", controllers.UserSignup)
+	// app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
 
 	app.Get("/api/v1/attributes", controllers.GetAllAttributes)
 	app.Get("/api/v1/categories", controllers.GetAllCategories)
 
 	//User specific routes
-	app.Use("/api/v1/user/", middlewares.UserMiddleware)
+	// app.Use("/api/v1/user/", middlewares.UserMiddleware)
 
 	app.Post("/api/v1/user/addresses", controllers.CreateAddress)
 	app.Put("/api/v1/user/addresses/:id", controllers.UpdateAddress)
@@ -43,7 +43,7 @@ func Initialize(app *fiber.App) {
 	app.Get("/api/v1/user/wallets", controllers.GetAllWallets)
 
 	//Merchant specific routes
-	app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)
+	// app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)
 
 	app.Post("/api/v1/merchant/stores", controllers.CreateStore)
 	app.Put("/api/v1/merchant/stores/:id", controllers.UpdateStore)
@@ -55,12 +55,12 @@ func Initialize(app *fiber.App) {
 	app.Put("/api/v1/merchant/items/:id", controllers.UpdateItem)
 
 	//Admin specific routes
-	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
+	// app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
 
-	app.Use("/api/v1/admin/current", controllers.GetCurrentAdmin)
+	// app.Use("/api/v1/admin/current", controllers.GetCurrentAdmin)
 
-	app.Post("/api/v1/admin/admins/", controllers.CreateAdmin)
-	app.Get("/api/v1/admin/admins/", controllers.GetAllAdmins)
+	// app.Post("/api/v1/admin/admins/", controllers.CreateAdmin)
+	// app.Get("/api/v1/admin/admins/", controllers.GetAllAdmins)
 
 	app.Put("/api/v1/admin/ban/merchant/:id", controllers.BanMerchant)
 	app.Put("/api/v1/admin/ban/user/:id", controllers.BanUser)
