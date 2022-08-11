@@ -20,6 +20,7 @@ const (
 	SignTypeNative         = "native"
 	SignTypeParty          = "party"
 	MerchantStatusActive   = "active"
+	MerchantStatusInactive = "inactive"
 	MerchantStatusBanned   = "banned"
 	UserStatusActive       = "active"
 	UserStatusBanned       = "banned"

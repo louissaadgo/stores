@@ -10,7 +10,10 @@ import (
 func Initialize(app *fiber.App) {
 	app.Use(cors.New())
 	//Unauthorized routes
-	app.Post("/api/v1/auth/web/signup", controllers.MerchantSignup)
+	app.Post("/api/v1/auth/web/signup", controllers.WebSignup)
+	app.Post("/api/v1/auth/web/login", controllers.WebLogin)
+	app.Get("/api/v1/auth/web/current/user/type", controllers.WebCurrentUserType)
+
 	// app.Post("/api/v1/auth/admin/signin", controllers.AdminSignin)
 	// app.Post("/api/v1/auth/merchant/signup", controllers.MerchantSignup)
 	// app.Post("/api/v1/auth/merchant/signin", controllers.MerchantSignin)

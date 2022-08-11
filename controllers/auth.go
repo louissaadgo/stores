@@ -14,7 +14,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func MerchantSignup(c *fiber.Ctx) error {
+func WebSignup(c *fiber.Ctx) error {
 
 	merchant := models.Merchant{}
 	err := c.BodyParser(&merchant)
@@ -79,7 +79,7 @@ func MerchantSignup(c *fiber.Ctx) error {
 	}
 
 	merchant.Password = hashedPassword
-	merchant.Status = models.MerchantStatusActive
+	merchant.Status = models.MerchantStatusInactive
 	creationTime := time.Now().UTC()
 	merchant.CreatedAt = creationTime
 	merchant.UpdatedAt = creationTime
@@ -142,5 +142,217 @@ func MerchantSignup(c *fiber.Ctx) error {
 	message := fmt.Sprintf("Welcome to Aswak, %v.\nYou have been successfully registered as a merchant.", merchant.Name)
 	go emailing.SendEmail(merchant.Email, subject, message)
 
+	return c.JSON(response)
+}
+
+func WebCurrentUserType(c *fiber.Ctx) error {
+
+	tokenString := c.Query("token", "")
+
+	payload, isValid := token.VerifyPasetoToken(tokenString)
+	if !isValid {
+		response := models.Response{
+			Type: "error_unauthenticated",
+			Data: views.Error{
+				Error: "Invalid token",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if payload.UserType != models.TypeMerchant && payload.UserType != models.TypeAdmin {
+		response := models.Response{
+			Type: "error_invalid_user_type",
+			Data: views.Error{
+				Error: "Error invalid user type",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	var userStatus string
+	var name string
+	if payload.UserType == models.TypeMerchant {
+		query := db.DB.QueryRow(`SELECT name, status FROM merchants WHERE id = $1;`, payload.UserID)
+		err := query.Scan(&name, &userStatus)
+		if err == sql.ErrNoRows {
+			response := models.Response{
+				Type: "error_unauthenticated",
+				Data: views.Error{
+					Error: "Invalid token",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		if userStatus == models.MerchantStatusBanned {
+			response := models.Response{
+				Type: "error_merchant_banned",
+				Data: views.Error{
+					Error: "Merchant banned",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		if userStatus == models.MerchantStatusInactive {
+			response := models.Response{
+				Type: "error_merchant_inactive",
+				Data: views.Error{
+					Error: "Merchant inactive",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+	}
+
+	if payload.UserType == models.TypeAdmin {
+		query := db.DB.QueryRow(`SELECT name FROM admins WHERE id = $1;`, payload.UserID)
+		err := query.Scan(&name)
+		if err == sql.ErrNoRows {
+			response := models.Response{
+				Type: "error_unauthenticated",
+				Data: views.Error{
+					Error: "Invalid token",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+	}
+
+	response := models.Response{
+		Type: "success",
+		Data: views.CurrentTypeWeb{
+			CurrentType: payload.UserType,
+			Name:        name,
+		},
+	}
+
+	return c.JSON(response)
+}
+
+func WebLogin(c *fiber.Ctx) error {
+
+	emailQuery := c.Query("email", "")
+	passwordQuery := c.Query("password", "")
+
+	var password string
+	var userID int
+
+	query := db.DB.QueryRow(`SELECT id, password FROM merchants WHERE email = $1;`, emailQuery)
+	err := query.Scan(&userID, &password)
+	if err == nil || err != sql.ErrNoRows {
+		if isValid := ValidatePassword(passwordQuery, password); !isValid {
+			response := models.Response{
+				Type: "invalid_credentials",
+				Data: views.Error{
+					Error: "Invalid Credentials",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		tokenID := uuid.New().String()
+		_, err = db.DB.Exec(`UPDATE merchants SET token_id = $1 WHERE email = $2;`, tokenID, emailQuery)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		token, err := token.GeneratePasetoToken(tokenID, userID, models.TypeMerchant)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		cookie := fiber.Cookie{
+			Name:  "token",
+			Value: token,
+		}
+		c.Cookie(&cookie)
+
+		response := models.Response{
+			Type: models.TypeAuthResponse,
+			Data: views.AuthWeb{
+				AuthToken: token,
+			},
+		}
+
+		return c.JSON(response)
+	}
+
+	query = db.DB.QueryRow(`SELECT id, password FROM admins WHERE email = $1;`, emailQuery)
+	err = query.Scan(&userID, &password)
+	if err == nil || err != sql.ErrNoRows {
+		if isValid := ValidatePassword(passwordQuery, password); !isValid {
+			response := models.Response{
+				Type: "invalid_credentials",
+				Data: views.Error{
+					Error: "Invalid Credentials",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		tokenID := uuid.New().String()
+		_, err = db.DB.Exec(`UPDATE admins SET token_id = $1 WHERE email = $2;`, tokenID, emailQuery)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		token, err := token.GeneratePasetoToken(tokenID, userID, models.TypeAdmin)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		cookie := fiber.Cookie{
+			Name:  "token",
+			Value: token,
+		}
+		c.Cookie(&cookie)
+
+		response := models.Response{
+			Type: models.TypeAuthResponse,
+			Data: views.AuthWeb{
+				AuthToken: token,
+			},
+		}
+
+		return c.JSON(response)
+	}
+
+	response := models.Response{
+		Type: "invalid_credentials",
+		Data: views.Error{
+			Error: "Invalid Credentials",
+		},
+	}
+	c.Status(400)
 	return c.JSON(response)
 }

@@ -19,7 +19,7 @@ type Merchant struct {
 
 func (merchant *Merchant) Validate() ([]error, bool) {
 	name := checkif.StringObject{Data: merchant.Name}
-	name.IsLongerThan(1).IsShorterThan(26)
+	name.IsLongerThan(0).IsShorterThan(26)
 	if name.IsInvalid {
 		return name.Errors, false
 	}
@@ -31,7 +31,7 @@ func (merchant *Merchant) Validate() ([]error, bool) {
 	}
 
 	password := checkif.StringObject{Data: merchant.Password}
-	password.IsLongerThan(7).IsShorterThan(61).ContainsLowerCaseLetter().ContainsUpperCaseLetter().ContainsNumber()
+	password.IsLongerThan(7).IsShorterThan(61)
 	if password.IsInvalid {
 		return password.Errors, false
 	}
