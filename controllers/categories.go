@@ -8,8 +8,75 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
+
+func GetAllCategories(c *fiber.Ctx) error {
+	var categories []views.CategoryResponse
+	rows, err := db.DB.Query(`SELECT id, name, created_at, updated_at FROM categories;`)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+	defer rows.Close()
+
+	var category views.CategoryResponse
+	for rows.Next() {
+		if err := rows.Scan(&category.ID, &category.Name, &category.CreatedAt, &category.UpdatedAt); err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		newRows, err := db.DB.Query(`SELECT id, name, category_id, created_at, updated_at FROM subcategories WHERE category_id = $1;`, category.ID)
+		if err != nil {
+			response := models.Response{
+				Type: models.TypeErrorResponse,
+				Data: views.Error{
+					Error: "Something went wrong please try again",
+				},
+			}
+			c.Status(400)
+			return c.JSON(response)
+		}
+		defer newRows.Close()
+		var subCategories []views.SubCategoryResponse
+		for newRows.Next() {
+			var subCategory views.SubCategoryResponse
+			if err := newRows.Scan(&subCategory.ID, &subCategory.Name, &subCategory.CategoryID, &subCategory.CreatedAt, &subCategory.UpdatedAt); err != nil {
+				response := models.Response{
+					Type: models.TypeErrorResponse,
+					Data: views.Error{
+						Error: "Something went wrong please try again",
+					},
+				}
+				c.Status(400)
+				return c.JSON(response)
+			}
+			subCategories = append(subCategories, subCategory)
+		}
+		category.SubCategories = subCategories
+		categories = append(categories, category)
+	}
+
+	response := models.Response{
+		Type: models.TypeAllCategories,
+		Data: views.AllCategories{
+			Categories: categories,
+		},
+	}
+
+	return c.JSON(response)
+}
 
 func CreateCategory(c *fiber.Ctx) error {
 	category := models.Category{}
@@ -36,20 +103,11 @@ func CreateCategory(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	for {
-		category.ID = uuid.New().String()
-		query := db.DB.QueryRow(`SELECT id FROM categories WHERE id = $1;`, category.ID)
-		err = query.Scan(&category.ID)
-		if err != nil {
-			break
-		}
-	}
-
 	query := db.DB.QueryRow(`SELECT name FROM categories WHERE name = $1;`, category.Name)
 	err = query.Scan(&category.Name)
 	if err == nil || err != sql.ErrNoRows {
 		response := models.Response{
-			Type: models.TypeErrorResponse,
+			Type: "category_already_exists",
 			Data: views.Error{
 				Error: "Category name already exists",
 			},

@@ -86,19 +86,18 @@ CREATE TABLE links (
 );
 
 CREATE TABLE categories (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE subcategories (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name varchar,
-    category_id varchar,
+    category_id int,
     created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE attributes (

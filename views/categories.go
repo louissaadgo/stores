@@ -9,7 +9,7 @@ type SubCategoryResponse struct {
 }
 
 type CategoryResponse struct {
-	ID            string                `json:"id"`
+	ID            int                   `json:"id"`
 	Name          string                `json:"name"`
 	SubCategories []SubCategoryResponse `json:"subcategories"`
 	CreatedAt     string                `json:"created_at"`

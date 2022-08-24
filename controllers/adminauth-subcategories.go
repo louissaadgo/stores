@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
 func CreateSubCategory(c *fiber.Ctx) error {
@@ -33,15 +32,6 @@ func CreateSubCategory(c *fiber.Ctx) error {
 		}
 		c.Status(400)
 		return c.JSON(response)
-	}
-
-	for {
-		subCategory.ID = uuid.New().String()
-		query := db.DB.QueryRow(`SELECT id FROM subcategories WHERE id = $1;`, subCategory.ID)
-		err = query.Scan(&subCategory.ID)
-		if err != nil {
-			break
-		}
 	}
 
 	query := db.DB.QueryRow(`SELECT id FROM categories WHERE id = $1;`, subCategory.CategoryID)
