@@ -7,10 +7,9 @@ import (
 )
 
 type Review struct {
-	ID        string    `json:"id"`
-	UserID    string    `json:"user_id"`
-	ItemID    string    `json:"item_id"`
-	OrderID   string    `json:"order_id"`
+	ID        int       `json:"id"`
+	UserID    int       `json:"user_id"`
+	OrderID   int       `json:"order_id"`
 	Rating    int       `json:"rating"`
 	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"created_at"`

@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name varchar,
     phone varchar,
     verified_phone BOOLEAN,
@@ -14,8 +14,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE addresses (
-    id varchar PRIMARY KEY,
-    user_id varchar,
+    id SERIAL PRIMARY KEY,
+    user_id int,
     name varchar,
     region varchar,
     city varchar,
@@ -23,8 +23,7 @@ CREATE TABLE addresses (
     longitude varchar,
     latitude varchar,
     created_at TIMESTAMP WITH TIME ZONE,
-    updated_at TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    updated_at TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE admins (
@@ -48,20 +47,8 @@ CREATE TABLE merchants (
     updated_at  TIMESTAMP WITH TIME ZONE
 );
 
-CREATE TABLE coupons (
-    id varchar PRIMARY KEY,
-    value float,
-    type varchar,
-    max_usage int,
-    used int,
-    code varchar,
-    end_date TIMESTAMP WITH TIME ZONE,
-    created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE
-);
-
 CREATE TABLE stores (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     merchant_id int,
     name varchar,
     description varchar,
@@ -75,14 +62,13 @@ CREATE TABLE stores (
 );
 
 CREATE TABLE links (
-    id varchar PRIMARY KEY,
-    store_id varchar,
+    id SERIAL PRIMARY KEY,
+    store_id int,
     name varchar,
     url varchar,
     logo varchar,
     created_at TIMESTAMP WITH TIME ZONE,
-    updated_at TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (store_id) REFERENCES stores(id)
+    updated_at TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE categories (
@@ -101,120 +87,97 @@ CREATE TABLE subcategories (
 );
 
 CREATE TABLE attributes (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE attribute_values (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name varchar,
-    attribute_id varchar,
+    attribute_id int,
     created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (attribute_id) REFERENCES attributes(id)
+    updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE currencies (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name varchar,
     symbol varchar,
     factor float
 );
 
 CREATE TABLE transactions (
-    id varchar PRIMARY KEY,
-    user_id varchar,
-    currency_id varchar,
+    id SERIAL PRIMARY KEY,
+    user_id int,
+    currency_id int,
     amount float,
-    created_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (currency_id) REFERENCES currencies(id)
+    created_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE items (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     sku varchar,
     name varchar,
     description varchar,
     long_description varchar,
     price float,
-    store_id varchar,
-    category_id varchar,
-    subcategory_id varchar,
-    created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE,
+    store_id int,
+    category_id int,
+    subcategory_id int,
     stock int,
     status varchar,
-    FOREIGN KEY (store_id) REFERENCES stores(id),
-    FOREIGN KEY (category_id) REFERENCES categories(id),
-    FOREIGN KEY (subcategory_id) REFERENCES subcategories(id)
+    created_at  TIMESTAMP WITH TIME ZONE,
+    updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE selected_attributes (
-    id varchar PRIMARY KEY,
-    item_id varchar,
-    attribute_id varchar,
-    attribute_value_id varchar,
-    FOREIGN KEY (item_id) REFERENCES items(id),
-    FOREIGN KEY (attribute_id) REFERENCES attributes(id),
-    FOREIGN KEY (attribute_value_id) REFERENCES attribute_values(id)
+    id SERIAL PRIMARY KEY,
+    item_id int,
+    attribute_id int,
+    attribute_value_id int
 );
 
 CREATE TABLE orders (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     status varchar,
     total float,
     total_discounted float,
-    user_id varchar,
-    coupon_id varchar,
-    address_id varchar,
-    currency_id varchar,
+    user_id int,
+    address_id int,
+    currency_id int,
     created_at  TIMESTAMP WITH TIME ZONE,
     updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE favorites (
-    id varchar PRIMARY KEY,
-    user_id varchar,
-    item_id varchar,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    id SERIAL PRIMARY KEY,
+    user_id int,
+    item_id int
 );
 
 CREATE TABLE reviews (
-    id varchar PRIMARY KEY,
-    user_id varchar,
-    item_id varchar,
-    order_id varchar,
+    id SERIAL PRIMARY KEY,
+    user_id int,
+    order_id int,
     rating int,
     content varchar,
     created_at  TIMESTAMP WITH TIME ZONE,
-    updated_at  TIMESTAMP WITH TIME ZONE,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (item_id) REFERENCES items(id),
-    FOREIGN KEY (order_id) REFERENCES orders(id)
+    updated_at  TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE carts (
-    id varchar PRIMARY KEY,
-    user_id varchar,
-    item_id varchar,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
-CREATE TABLE interests (
-    id varchar PRIMARY KEY,
-    user_id varchar,
-    category_id varchar,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    id SERIAL PRIMARY KEY,
+    user_id int,
+    item_id int
 );
 
 CREATE TABLE items_order (
-    id varchar PRIMARY KEY,
-    order_id varchar,
-    item_id varchar,
-    store_id varchar,
+    id SERIAL PRIMARY KEY,
+    order_id int,
+    item_id int,
+    store_id int,
     price float,
     discounted_price float,
     payment varchar,
@@ -222,7 +185,7 @@ CREATE TABLE items_order (
 );
 
 CREATE TABLE item_images (
-    id varchar PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     source varchar,
-    item_id varchar
+    item_id int
 );

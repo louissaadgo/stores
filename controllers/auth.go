@@ -250,7 +250,7 @@ func WebLogin(c *fiber.Ctx) error {
 			response := models.Response{
 				Type: "invalid_credentials",
 				Data: views.Error{
-					Error: "Invalid Credentials",
+					Error: err.Error(),
 				},
 			}
 			c.Status(400)

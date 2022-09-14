@@ -30,7 +30,7 @@ func (admin *Admin) Validate() ([]error, bool) {
 	}
 
 	password := checkif.StringObject{Data: admin.Password}
-	password.IsLongerThan(7).IsShorterThan(61).ContainsLowerCaseLetter().ContainsUpperCaseLetter().ContainsNumber()
+	password.IsLongerThan(6).IsShorterThan(61)
 	if password.IsInvalid {
 		return password.Errors, false
 	}

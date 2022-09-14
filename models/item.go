@@ -7,18 +7,18 @@ import (
 )
 
 type Item struct {
-	ID              string    `json:"id"`
+	ID              int       `json:"id"`
 	Name            string    `json:"name"`
 	SKU             string    `json:"sku"`
 	Description     string    `json:"description"`
 	LongDescription string    `json:"long_description"`
 	Price           float64   `json:"price"`
 	Images          []string  `json:"images"`
-	StoreID         string    `json:"store_id"`
+	StoreID         int       `json:"store_id"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
-	CategoryID      string    `json:"category_id"`
-	SubCategoryID   string    `json:"subcategory_id"`
+	CategoryID      int       `json:"category_id"`
+	SubCategoryID   int       `json:"subcategory_id"`
 	Stock           int       `json:"stock"`
 	Status          string    `json:"status"`
 }

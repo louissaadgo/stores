@@ -7,8 +7,8 @@ import (
 )
 
 type Store struct {
-	ID             string    `json:"id"`
-	MerchantID     string    `json:"merchant_id"`
+	ID             int       `json:"id"`
+	MerchantID     int       `json:"merchant_id"`
 	Name           string    `json:"name"`
 	Description    string    `json:"description"`
 	Phone          string    `json:"phone"`

@@ -41,10 +41,12 @@ func VerifyPasetoToken(token string) (models.PasetoTokenPayload, bool) {
 
 	err := paseto.Decrypt(token, []byte(key), &payload, nil)
 	if err != nil {
+		fmt.Println(err)
 		return payload, false
 	}
 
 	if !time.Now().Before(payload.ExpiresAt) {
+		fmt.Println("time")
 		return payload, false
 	}
 

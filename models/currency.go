@@ -3,7 +3,7 @@ package models
 import "github.com/louissaadgo/go-checkif"
 
 type Currency struct {
-	ID     string  `json:"id"`
+	ID     int     `json:"id"`
 	Name   string  `json:"name"`
 	Symbol string  `json:"symbol"`
 	Factor float64 `json:"factor"`

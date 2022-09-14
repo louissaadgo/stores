@@ -1,8 +1,8 @@
 package models
 
 type ItemImages struct {
-	ID     string `json:"id"`
-	ItemID string `json:"item_id"`
+	ID     int    `json:"id"`
+	ItemID int    `json:"item_id"`
 	Url    string `json:"url"`
 }
 
