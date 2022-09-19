@@ -118,8 +118,8 @@ func CreateCategory(c *fiber.Ctx) error {
 	category.CreatedAt = time.Now().UTC()
 	category.UpdatedAt = time.Now().UTC()
 
-	_, err = db.DB.Exec(`INSERT INTO categories(id, name, created_at, updated_at)
-	VALUES($1, $2, $3, $4);`, category.ID, category.Name, category.CreatedAt, category.UpdatedAt)
+	_, err = db.DB.Exec(`INSERT INTO categories(name, created_at, updated_at)
+	VALUES($1, $2, $3);`, category.Name, category.CreatedAt, category.UpdatedAt)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -187,7 +187,7 @@ func UpdateCategory(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Category name already exists",
+				Error: "category_name_already_exists",
 			},
 		}
 		c.Status(400)

@@ -51,8 +51,8 @@ func CreateSubCategory(c *fiber.Ctx) error {
 	subCategory.CreatedAt = time.Now().UTC()
 	subCategory.UpdatedAt = time.Now().UTC()
 
-	_, err = db.DB.Exec(`INSERT INTO subcategories(id, name, category_id, created_at, updated_at)
-	VALUES($1, $2, $3, $4, $5);`, subCategory.ID, subCategory.Name, subCategory.CategoryID, subCategory.CreatedAt, subCategory.UpdatedAt)
+	_, err = db.DB.Exec(`INSERT INTO subcategories(name, category_id, created_at, updated_at)
+	VALUES($1, $2, $3, $4);`, subCategory.Name, subCategory.CategoryID, subCategory.CreatedAt, subCategory.UpdatedAt)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,

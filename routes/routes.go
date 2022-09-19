@@ -19,7 +19,7 @@ func Initialize(app *fiber.App) {
 	// app.Post("/api/v1/auth/user/signup", controllers.UserSignup)
 	// app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
 
-	// app.Get("/api/v1/categories", controllers.GetAllCategories)
+	app.Get("/api/v1/categories", controllers.GetAllCategories)
 
 	// app.Get("/api/v1/attributes", controllers.GetAllAttributes)
 
@@ -80,11 +80,11 @@ func Initialize(app *fiber.App) {
 	// app.Post("/api/v1/admin/currencies", controllers.CreateCurrency)
 	// app.Put("/api/v1/admin/currencies/:id", controllers.UpdateCurrency)
 
-	// app.Post("/api/v1/admin/categories", controllers.CreateCategory)
-	// app.Put("/api/v1/admin/categories/:id", controllers.UpdateCategory)
+	app.Post("/api/v1/admin/categories", controllers.CreateCategory)
+	app.Put("/api/v1/admin/categories/:id", controllers.UpdateCategory)
 
-	// app.Post("/api/v1/admin/subcategories", controllers.CreateSubCategory)
-	// app.Put("/api/v1/admin/subcategories/:id", controllers.UpdateSubCategory)
+	app.Post("/api/v1/admin/subcategories", controllers.CreateSubCategory)
+	app.Put("/api/v1/admin/subcategories/:id", controllers.UpdateSubCategory)
 
 	// app.Get("/api/v1/admin/coupons", controllers.GetAllCoupons)
 	// app.Post("/api/v1/admin/coupons", controllers.CreateCoupon)
