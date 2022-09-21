@@ -14,6 +14,7 @@ const (
 	TypeAllCoupons      = "all_coupons"
 	TypeAllAttributes   = "all_attributes"
 	TypeAllCategories   = "all_categories"
+	TypeAllCurrencies   = "all_currencies"
 	TypeAllWallets      = "all_wallets"
 	TypeUserCart        = "user_cart"
 	PlatformMobile      = "mobile"
