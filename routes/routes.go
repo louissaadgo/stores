@@ -56,7 +56,6 @@ func Initialize(app *fiber.App) {
 	// app.Put("/api/v1/merchant/items/:id", controllers.UpdateItem)
 
 	//Admin specific routes
-
 	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
 
 	// app.Use("/api/v1/admin/current", controllers.GetCurrentAdmin)
@@ -69,7 +68,6 @@ func Initialize(app *fiber.App) {
 	app.Put("/api/v1/admin/active/merchant/:id", controllers.ActivateMerchant)
 
 	// app.Put("/api/v1/admin/ban/user/:id", controllers.BanUser)
-
 	// app.Put("/api/v1/admin/activate/user/:id", controllers.ActivateUser)
 
 	// app.Post("/api/v1/admin/attributes", controllers.CreateAttribute)

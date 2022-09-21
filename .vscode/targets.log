@@ -2,42 +2,78 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target 'all'.  Stop.
 
 # GNU Make 4.2.1
+ 
 # Built for x86_64-pc-linux-gnu
+ 
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
+ 
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+ 
 # This is free software: you are free to change and redistribute it.
+ 
 # There is NO WARRANTY, to the extent permitted by law.
+ 
 
-# Make data base, printed on Wed Sep 21 08:46:37 2022
+ 
+# Make data base, printed on Wed Sep 21 11:20:21 2022
+ 
 
 # Variables
+ 
 
+ 
 # 'override' directive
+ 
 GNUMAKEFLAGS := 
+ 
 # automatic
+ 
 <D = $(patsubst %/,%,$(dir $<))
+ 
 # automatic
+ 
 ?F = $(notdir $?)
+ 
 # environment
+ 
 PAPERSIZE = letter
+ 
 # environment
+ 
 DESKTOP_SESSION = zorin
+ 
 # default
+ 
 .SHELLFLAGS := -c
+ 
 # environment
+ 
 XDG_SESSION_CLASS = user
+ 
 # environment
+ 
 SNAP_COMMON = /var/snap/code/common
+ 
 # environment
+ 
 XDG_SESSION_TYPE = x11
+ 
 # automatic
+ 
 ?D = $(patsubst %/,%,$(dir $?))
+ 
 # automatic
+ 
 @D = $(patsubst %/,%,$(dir $@))
+ 
 # environment
+ 
 XAUTHORITY = /run/user/1000/gdm/Xauthority
+ 
 # environment
+ 
 GDMSESSION = zorin
+ 
 # environment
 XMODIFIERS = @im=ibus
 # makefile
@@ -230,7 +266,6 @@ OLDPWD = /home/louisgo
 VSCODE_IPC_HOOK = /run/user/1000/vscode-4243ec2b-1.71.2-main.sock
 # makefile
 MAKEFLAGS = pqrR
- 
 # environment
 MFLAGS = -pqrR
 # automatic
@@ -256,7 +291,6 @@ AMAZON_SES_PORT = 587
 # environment
 AMAZON_SES_SERVER = email-smtp.us-east-1.amazonaws.com
 # default
- 
 MAKEFILES := 
 # environment
 SNAP_COOKIE = ps16OiRyQSdgBgrUUWdewgFbm6j95F8UJjGBTKWPkyHqaQ2YcsaA
@@ -275,18 +309,17 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/b133bbd9_5d70_4987_a144_491e0b819bda
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/a752ea44_73dd_4c96_a8c8_3ff2d472a6d8
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.197
+GNOME_TERMINAL_SERVICE = :1.607
 # default
 SUFFIXES := 
 # environment
 SNAP_REEXEC = 
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
- 
 # environment
 WINDOWPATH = 2
 # default
@@ -304,7 +337,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 12278
+VSCODE_PID = 27920
 # variable set hash-table stats:
 # Load=145/1024=14%, Rehash=0, Collisions=22/170=13%
 
@@ -317,6 +350,7 @@ VSCODE_PID = 12278
 # . (device 2050, inode 13635890): 22 files, no impossibilities.
 
 # 22 files, no impossibilities in 1 directories.
+ 
 
 # Implicit Rules
 
@@ -345,7 +379,6 @@ Makefile:
 #  File has not been updated.
 
 run:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -366,6 +399,6 @@ run:
 # strcache performance: lookups = 33 / hit rate = 15%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=1/33=3%
-# Finished Make data base on Wed Sep 21 08:46:37 2022
+# Finished Make data base on Wed Sep 21 11:20:21 2022
 
  
