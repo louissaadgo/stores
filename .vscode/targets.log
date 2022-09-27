@@ -2,78 +2,42 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target 'all'.  Stop.
 
 # GNU Make 4.2.1
- 
 # Built for x86_64-pc-linux-gnu
- 
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
- 
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
- 
 # This is free software: you are free to change and redistribute it.
- 
 # There is NO WARRANTY, to the extent permitted by law.
- 
 
- 
-# Make data base, printed on Wed Sep 21 11:20:21 2022
- 
+# Make data base, printed on Tue Sep 27 08:41:08 2022
 
 # Variables
- 
 
- 
 # 'override' directive
- 
 GNUMAKEFLAGS := 
- 
 # automatic
- 
 <D = $(patsubst %/,%,$(dir $<))
- 
 # automatic
- 
 ?F = $(notdir $?)
- 
 # environment
- 
 PAPERSIZE = letter
- 
 # environment
- 
 DESKTOP_SESSION = zorin
- 
 # default
- 
 .SHELLFLAGS := -c
- 
 # environment
- 
 XDG_SESSION_CLASS = user
- 
 # environment
- 
 SNAP_COMMON = /var/snap/code/common
- 
 # environment
- 
 XDG_SESSION_TYPE = x11
- 
 # automatic
- 
 ?D = $(patsubst %/,%,$(dir $?))
- 
 # automatic
- 
 @D = $(patsubst %/,%,$(dir $@))
- 
 # environment
- 
 XAUTHORITY = /run/user/1000/gdm/Xauthority
- 
 # environment
- 
 GDMSESSION = zorin
- 
 # environment
 XMODIFIERS = @im=ibus
 # makefile
@@ -87,7 +51,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:45770
+JOURNAL_STREAM = 8:46810
 # environment
 DB_CONNECTION = postgres://postgres:2400@localhost/zealouss?sslmode=disable
 # environment
@@ -117,7 +81,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:
 # environment
-MANAGERPID = 1199
+MANAGERPID = 1323
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -139,7 +103,7 @@ PASETO_KEY = 0123456789zealoussio012345678924
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/2044,unix/louisgo:/tmp/.ICE-unix/2044
+SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/2248,unix/louisgo:/tmp/.ICE-unix/2248
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -155,7 +119,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 3c31931608de46c89e67dcbe67595c5e
+INVOCATION_ID = 2db29e9519954147879f694b1ce5c1d8
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/108/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -179,7 +143,7 @@ QT_QPA_PLATFORMTHEME = gtk3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1758
+SSH_AGENT_PID = 1961
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = zorin:GNOME
 # environment
@@ -309,11 +273,11 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/a752ea44_73dd_4c96_a8c8_3ff2d472a6d8
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/411afe3f_a7df_479b_8cd2_41445e3f04d9
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.607
+GNOME_TERMINAL_SERVICE = :1.333
 # default
 SUFFIXES := 
 # environment
@@ -333,11 +297,12 @@ LC_ADDRESS = en_US.UTF-8
 # environment
 AMAZON_SES_KEY = BLDRaxO9QDap+k8wHxdYgEKN7TgO8x+AQALXZ8dQwBKK
 # environment
+ 
 LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 27920
+VSCODE_PID = 12255
 # variable set hash-table stats:
 # Load=145/1024=14%, Rehash=0, Collisions=22/170=13%
 
@@ -350,7 +315,6 @@ VSCODE_PID = 27920
 # . (device 2050, inode 13635890): 22 files, no impossibilities.
 
 # 22 files, no impossibilities in 1 directories.
- 
 
 # Implicit Rules
 
@@ -399,6 +363,6 @@ run:
 # strcache performance: lookups = 33 / hit rate = 15%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=1/33=3%
-# Finished Make data base on Wed Sep 21 11:20:21 2022
+# Finished Make data base on Tue Sep 27 08:41:08 2022
 
  

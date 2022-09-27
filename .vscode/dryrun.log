@@ -1,7 +1,5 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/louisgo/go/github.com/louissaadgo/stores'
- 
 go run main/main.go
- 
 make: Leaving directory '/home/louisgo/go/github.com/louissaadgo/stores'
  

@@ -70,11 +70,11 @@ func Initialize(app *fiber.App) {
 	// app.Put("/api/v1/admin/ban/user/:id", controllers.BanUser)
 	// app.Put("/api/v1/admin/activate/user/:id", controllers.ActivateUser)
 
-	// app.Post("/api/v1/admin/attributes", controllers.CreateAttribute)
-	// app.Put("/api/v1/admin/attributes/:id", controllers.UpdateAttribute)
+	app.Post("/api/v1/admin/attributes", controllers.CreateAttribute)
+	app.Put("/api/v1/admin/attributes/:id", controllers.UpdateAttribute)
 
-	// app.Post("/api/v1/admin/attributevalues", controllers.CreateAttributeValue)
-	// app.Put("/api/v1/admin/attributevalues/:id", controllers.UpdateAttributeValue)
+	app.Post("/api/v1/admin/attributevalues", controllers.CreateAttributeValue)
+	app.Put("/api/v1/admin/attributevalues/:id", controllers.UpdateAttributeValue)
 
 	app.Post("/api/v1/admin/currencies", controllers.CreateCurrency)
 	app.Put("/api/v1/admin/currencies/:id", controllers.UpdateCurrency)
