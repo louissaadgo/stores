@@ -22,7 +22,7 @@ func Initialize(app *fiber.App) {
 	app.Get("/api/v1/categories", controllers.GetAllCategories)
 	app.Get("/api/v1/currencies", controllers.GetAllCurrencies)
 
-	// app.Get("/api/v1/attributes", controllers.GetAllAttributes)
+	app.Get("/api/v1/attributes", controllers.GetAllAttributes)
 
 	//User specific routes
 	// app.Use("/api/v1/user/", middlewares.UserMiddleware)
@@ -44,21 +44,24 @@ func Initialize(app *fiber.App) {
 	// app.Get("/api/v1/user/wallets", controllers.GetAllWallets)
 
 	//Merchant specific routes
-	// app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)
+	app.Use("/api/v1/merchant/", middlewares.MerchantMiddleware)
 
-	// app.Post("/api/v1/merchant/stores", controllers.CreateStore)
-	// app.Put("/api/v1/merchant/stores/:id", controllers.UpdateStore)
+	//Add Get stores
+	app.Post("/api/v1/merchant/stores", controllers.CreateStore)
+	app.Put("/api/v1/merchant/stores/:id", controllers.UpdateStore)
 
-	// app.Post("/api/v1/merchant/links", controllers.CreateLink)
-	// app.Put("/api/v1/merchant/links/:id", controllers.UpdateLink)
+	//get all links
+	app.Post("/api/v1/merchant/links", controllers.CreateLink)
+	app.Put("/api/v1/merchant/links/:id", controllers.UpdateLink)
 
-	// app.Post("/api/v1/merchant/items", controllers.CreateItem)
-	// app.Put("/api/v1/merchant/items/:id", controllers.UpdateItem)
+	//get all items
+	app.Post("/api/v1/merchant/items", controllers.CreateItem)
+	app.Put("/api/v1/merchant/items/:id", controllers.UpdateItem)
 
 	//Admin specific routes
 	app.Use("/api/v1/admin/", middlewares.AdminMiddleware)
 
-	// app.Use("/api/v1/admin/current", controllers.GetCurrentAdmin)
+	app.Get("/api/v1/admin/current", controllers.GetCurrentAdmin)
 
 	app.Post("/api/v1/admin/admins/", controllers.CreateAdmin)
 	app.Get("/api/v1/admin/admins/", controllers.GetAllAdmins)
@@ -67,8 +70,9 @@ func Initialize(app *fiber.App) {
 	app.Put("/api/v1/admin/ban/merchant/:id", controllers.BanMerchant)
 	app.Put("/api/v1/admin/active/merchant/:id", controllers.ActivateMerchant)
 
-	// app.Put("/api/v1/admin/ban/user/:id", controllers.BanUser)
-	// app.Put("/api/v1/admin/activate/user/:id", controllers.ActivateUser)
+	//Add all users route
+	app.Put("/api/v1/admin/ban/user/:id", controllers.BanUser)
+	app.Put("/api/v1/admin/activate/user/:id", controllers.ActivateUser)
 
 	app.Post("/api/v1/admin/attributes", controllers.CreateAttribute)
 	app.Put("/api/v1/admin/attributes/:id", controllers.UpdateAttribute)
@@ -85,5 +89,5 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/admin/subcategories", controllers.CreateSubCategory)
 	app.Put("/api/v1/admin/subcategories/:id", controllers.UpdateSubCategory)
 
-	// app.Post("/api/v1/admin/transactions", controllers.CreateTransaction)
+	app.Post("/api/v1/admin/transactions", controllers.CreateTransaction)
 }
