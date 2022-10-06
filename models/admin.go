@@ -16,6 +16,11 @@ type Admin struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type AdminLogin struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func (admin *Admin) Validate() ([]error, bool) {
 	email := checkif.StringObject{Data: admin.Email}
 	email.IsEmail()

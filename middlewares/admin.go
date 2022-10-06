@@ -12,9 +12,20 @@ import (
 
 func AdminMiddleware(c *fiber.Ctx) error {
 
-	tokenString := c.Query("token", "")
+	tokenString := models.Token{}
+	err := c.BodyParser(&tokenString.Token)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
 
-	payload, isValid := token.VerifyPasetoToken(tokenString)
+	payload, isValid := token.VerifyPasetoToken(tokenString.Token)
 	if !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -38,7 +49,7 @@ func AdminMiddleware(c *fiber.Ctx) error {
 
 	query := db.DB.QueryRow(`SELECT id, token_id FROM admins WHERE id = $1;`, payload.UserID)
 	var tokenID string
-	err := query.Scan(&payload.UserID, &tokenID)
+	err = query.Scan(&payload.UserID, &tokenID)
 
 	if err != nil || tokenID != payload.ID {
 		response := models.Response{

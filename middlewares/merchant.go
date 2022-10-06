@@ -11,9 +11,9 @@ import (
 )
 
 func MerchantMiddleware(c *fiber.Ctx) error {
-	platform := models.Platform{}
-	err := c.BodyParser(&platform)
 
+	tokenString := models.Token{}
+	err := c.BodyParser(&tokenString.Token)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -24,23 +24,8 @@ func MerchantMiddleware(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
-	var authToken string
-	if platform.Platform == models.PlatformWeb {
-		authToken = c.Cookies("token")
-	} else if platform.Platform == models.PlatformMobile {
-		authToken = platform.AuthToken
-	} else {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Invalid platform",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
 
-	payload, isValid := token.VerifyPasetoToken(authToken)
+	payload, isValid := token.VerifyPasetoToken(tokenString.Token)
 	if !isValid {
 		response := models.Response{
 			Type: models.TypeErrorResponse,

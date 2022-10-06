@@ -11,8 +11,7 @@ type User struct {
 	Name          string    `json:"name"`
 	Phone         string    `json:"phone"`
 	VerifiedPhone bool      `json:"verified_phone"`
-	Email         string    `json:"email"`
-	VerifiedEmail bool      `json:"verified_email"`
+	OTP           string    `json:"otp"`
 	Password      string    `json:"password"`
 	TokenID       string    `json:"token_id"`
 	Country       string    `json:"country"`
@@ -32,12 +31,6 @@ func (user *User) Validate() ([]error, bool) {
 	password.IsLongerThan(7).IsShorterThan(61).ContainsLowerCaseLetter().ContainsUpperCaseLetter().ContainsNumber()
 	if password.IsInvalid {
 		return password.Errors, false
-	}
-
-	email := checkif.StringObject{Data: user.Email}
-	email.IsEmail()
-	if email.IsInvalid {
-		return email.Errors, false
 	}
 
 	return []error{}, true

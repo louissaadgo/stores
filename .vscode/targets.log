@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Sep 27 11:58:42 2022
+# Make data base, printed on Thu Oct  6 10:35:46 2022
 
 # Variables
 
@@ -51,7 +51,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:46640
+JOURNAL_STREAM = 8:46824
 # environment
 DB_CONNECTION = postgres://postgres:2400@localhost/zealouss?sslmode=disable
 # environment
@@ -81,7 +81,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:
 # environment
-MANAGERPID = 1313
+MANAGERPID = 1252
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -103,7 +103,7 @@ PASETO_KEY = 0123456789zealoussio012345678924
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/1975,unix/louisgo:/tmp/.ICE-unix/1975
+SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/2030,unix/louisgo:/tmp/.ICE-unix/2030
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -119,7 +119,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 534ab16928474060911800c005c847c2
+INVOCATION_ID = f22f48ab2cee4042a28d46825db5d248
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/108/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -128,13 +128,14 @@ GDK_PIXBUF_MODULEDIR = /snap/code/108/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.
 LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
 # environment
 XDG_SESSION_DESKTOP = zorin
- 
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # automatic
 %F = $(notdir $%)
 # environment
 DISPLAY = :0
+# environment
+STRIPE_WEBHOOK_SECRET = whsec_cf7c390cf31cff21da6be394ca2e82cbf23f6810e7ef5b6f68c4ccc49329a719
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
@@ -144,7 +145,7 @@ QT_QPA_PLATFORMTHEME = gtk3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1735
+SSH_AGENT_PID = 1783
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = zorin:GNOME
 # environment
@@ -171,6 +172,8 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 SNAP_CONTEXT = ps16OiRyQSdgBgrUUWdewgFbm6j95F8UJjGBTKWPkyHqaQ2YcsaA
 # automatic
 +F = $(notdir $+)
+# environment
+STRIPE_PAYMENT_CANCEL_URL = http://localhost:3000/selectplan
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
 # environment
@@ -214,15 +217,16 @@ LC_MONETARY = en_US.UTF-8
 # makefile
 .DEFAULT_GOAL := run
 # environment
+STRIPE_PRO_PLAN_PRICE_ID = price_1LoPEYIOhitPdg1zLKj1yMb0
+# environment
 XDG_CURRENT_DESKTOP = zorin:GNOME
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # environment
 LC_TELEPHONE = en_US.UTF-8
 # default
+ 
 MAKE_COMMAND := make
-# environment
-OLDPWD = /home/louisgo
 # default
 .VARIABLES := 
 # automatic
@@ -241,6 +245,8 @@ HOMEBREW_PREFIX = /home/linuxbrew/.linuxbrew
 +D = $(patsubst %/,%,$(dir $+))
 # environment
 GDK_BACKEND = x11
+# environment
+STRIPE_PAYMENT_SUCCESS_URL = http://localhost:3000/selectplan/success
 # environment
 LC_PAPER = en_US.UTF-8
 # environment
@@ -274,13 +280,15 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/0aac9742_6257_4ea7_879b_6d73a0a76409
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/b8161ec5_769b_40fe_9af2_cadfd130bcb8
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.112
+GNOME_TERMINAL_SERVICE = :1.625
 # default
 SUFFIXES := 
+# environment
+STRIPE_SECRET_KEY = sk_test_51JU9B9IOhitPdg1zeXYUWLi3h4jBo2HwL85MvvqDwCX8iqtEkHg8SzYm5yl7PJktV03fAKp7lDAH2A8vgiKrbLHA00buopowXv
 # environment
 SNAP_REEXEC = 
 # environment
@@ -294,7 +302,6 @@ GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # environment
- 
 LC_ADDRESS = en_US.UTF-8
 # environment
 AMAZON_SES_KEY = BLDRaxO9QDap+k8wHxdYgEKN7TgO8x+AQALXZ8dQwBKK
@@ -303,9 +310,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 6972
+VSCODE_PID = 24844
 # variable set hash-table stats:
-# Load=145/1024=14%, Rehash=0, Collisions=22/170=13%
+# Load=149/1024=15%, Rehash=0, Collisions=22/174=13%
 
 # Pattern-specific Variable Values
 
@@ -341,6 +348,7 @@ Makefile:
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 
 run:
@@ -358,12 +366,12 @@ run:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 28 / storage = 211 B / avg = 7 B
-# current buf: size = 8162 B / used = 211 B / count = 28 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 28 / storage = 213 B / avg = 7 B
+# current buf: size = 8162 B / used = 213 B / count = 28 / avg = 7 B
 
 # strcache performance: lookups = 33 / hit rate = 15%
 # hash-table stats:
 # Load=28/8192=0%, Rehash=0, Collisions=1/33=3%
-# Finished Make data base on Tue Sep 27 11:58:42 2022
+# Finished Make data base on Thu Oct  6 10:35:46 2022
 
  

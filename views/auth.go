@@ -5,8 +5,6 @@ type UserAuthData struct {
 	Phone         string `json:"phone"`
 	Country       string `json:"country"`
 	Status        string `json:"status"`
-	Email         string `json:"email"`
-	VerifiedEmail bool   `json:"verified_email"`
 	VerifiedPhone bool   `json:"verified_phone"`
 }
 

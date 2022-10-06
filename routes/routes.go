@@ -16,8 +16,10 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/auth/web/login", controllers.WebLogin)
 	app.Get("/api/v1/auth/web/current/user/type", controllers.WebCurrentUserType)
 
-	// app.Post("/api/v1/auth/user/signup", controllers.UserSignup)
-	// app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
+	app.Post("/api/v1/auth/user/signup", controllers.UserSignup)
+	app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
+	app.Get("/api/v1/auth/user/reset/password/request", controllers.UserResetPasswordRequest)
+	app.Post("/api/v1/auth/user/reset/password", controllers.UserResetPassword)
 
 	app.Get("/api/v1/categories", controllers.GetAllCategories)
 	app.Get("/api/v1/currencies", controllers.GetAllCurrencies)
@@ -25,7 +27,9 @@ func Initialize(app *fiber.App) {
 	app.Get("/api/v1/attributes", controllers.GetAllAttributes)
 
 	//User specific routes
-	// app.Use("/api/v1/user/", middlewares.UserMiddleware)
+	app.Use("/api/v1/user/", middlewares.UserMiddleware)
+	app.Get("/api/v1/user/request/otp", controllers.UserRequestOTP)
+	app.Post("/api/v1/user/verify/otp", controllers.UserVerifyOTP)
 
 	// app.Post("/api/v1/user/addresses", controllers.CreateAddress)
 	// app.Put("/api/v1/user/addresses/:id", controllers.UpdateAddress)

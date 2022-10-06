@@ -1,21 +1,19 @@
 package otp
 
 import (
-	"fmt"
-	"math/rand"
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 )
 
 func GenerateRandomNumber() string {
-	rand.Seed(time.Now().UnixNano())
-	d1 := rand.Intn(10)
-	d2 := rand.Intn(10)
-	d3 := rand.Intn(10)
-	d4 := rand.Intn(10)
-	numStr := fmt.Sprintf("%v%v%v%v", d1, d2, d3, d4)
+	// rand.Seed(time.Now().UnixNano())
+	// d1 := rand.Intn(10)
+	// d2 := rand.Intn(10)
+	// d3 := rand.Intn(10)
+	// d4 := rand.Intn(10)
+	// numStr := fmt.Sprintf("%v%v%v%v", d1, d2, d3, d4)
+	numStr := "1234"
 	return numStr
 }
 

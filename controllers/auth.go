@@ -6,6 +6,7 @@ import (
 	"stores/db"
 	"stores/emailing"
 	"stores/models"
+	"stores/otp"
 	"stores/token"
 	"stores/views"
 	"time"
@@ -147,9 +148,20 @@ func WebSignup(c *fiber.Ctx) error {
 
 func WebCurrentUserType(c *fiber.Ctx) error {
 
-	tokenString := c.Query("token", "")
+	tokenString := models.Token{}
+	err := c.BodyParser(&tokenString.Token)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
 
-	payload, isValid := token.VerifyPasetoToken(tokenString)
+	payload, isValid := token.VerifyPasetoToken(tokenString.Token)
 	if !isValid {
 		response := models.Response{
 			Type: "error_unauthenticated",
@@ -237,14 +249,27 @@ func WebCurrentUserType(c *fiber.Ctx) error {
 
 func WebLogin(c *fiber.Ctx) error {
 
-	emailQuery := c.Query("email", "")
-	passwordQuery := c.Query("password", "")
+	admin := models.AdminLogin{}
+	err := c.BodyParser(&admin)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	emailQuery := admin.Email
+	passwordQuery := admin.Password
 
 	var password string
 	var userID int
 
 	query := db.DB.QueryRow(`SELECT id, password FROM merchants WHERE email = $1;`, emailQuery)
-	err := query.Scan(&userID, &password)
+	err = query.Scan(&userID, &password)
 	if err == nil || err != sql.ErrNoRows {
 		if isValid := ValidatePassword(passwordQuery, password); !isValid {
 			response := models.Response{
@@ -355,4 +380,399 @@ func WebLogin(c *fiber.Ctx) error {
 	}
 	c.Status(400)
 	return c.JSON(response)
+}
+
+func UserSignup(c *fiber.Ctx) error {
+
+	user := models.User{}
+	err := c.BodyParser(&user)
+
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if _, isValid := user.Validate(); !isValid {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	var verifiedPhone bool = false
+
+	query := db.DB.QueryRow(`SELECT phone, verified_phone FROM users WHERE phone = $1;`, user.Phone)
+	err = query.Scan(&user.Phone, &verifiedPhone)
+
+	if (err == nil || err != sql.ErrNoRows) && verifiedPhone {
+		response := models.Response{
+			Type: "phone_already_registered",
+			Data: views.Error{
+				Error: "phone already registered",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	hashedPassword, _ := HashPassword(user.Password)
+	user.Password = hashedPassword
+	user.Status = models.UserStatusActive
+	user.VerifiedPhone = false
+	user.OTP = ""
+	user.CreatedAt = time.Now().UTC()
+	user.UpdatedAt = time.Now().UTC()
+
+	tokenID := uuid.New().String()
+
+	_, err = db.DB.Exec(`INSERT INTO users(name, phone, verified_phone, otp, password, token_id, country, status, created_at, updated_at)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`, user.Name, user.Phone, user.VerifiedPhone, user.OTP, user.Password, tokenID, user.Country, user.Status, user.CreatedAt, user.UpdatedAt)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Error occured while inserting into db",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	token, err := token.GeneratePasetoToken(tokenID, user.ID, models.TypeUser)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	cookie := fiber.Cookie{
+		Name:  "token",
+		Value: token,
+	}
+	c.Cookie(&cookie)
+
+	response := models.Response{
+		Type: models.TypeAuthResponse,
+		Data: views.UserAuth{
+			AuthToken: token,
+			UserData: views.UserAuthData{
+				Name:          user.Name,
+				Phone:         user.Phone,
+				Country:       user.Country,
+				Status:        user.Status,
+				VerifiedPhone: user.VerifiedPhone,
+			},
+		},
+	}
+
+	return c.JSON(response)
+}
+
+func UserSignin(c *fiber.Ctx) error {
+
+	user := models.User{}
+	err := c.BodyParser(&user)
+
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	password := user.Password
+
+	query := db.DB.QueryRow(`SELECT id, password, name, phone, country, status, verified_phone FROM users WHERE phone = $1;`, user.Phone)
+	err = query.Scan(&user.ID, &user.Password, &user.Name, &user.Phone, &user.Country, &user.Status, &user.VerifiedPhone)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Credentials",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if isValid := ValidatePassword(password, user.Password); !isValid {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Credentials",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	tokenID := uuid.New().String()
+	if tokenID == "" {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	_, err = db.DB.Exec(`UPDATE users SET token_id = $1 WHERE id = $2;`, tokenID, user.ID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Error modifying token_id",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	token, err := token.GeneratePasetoToken(tokenID, user.ID, models.TypeUser)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "error while generating paseto token",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	cookie := fiber.Cookie{
+		Name:  "token",
+		Value: token,
+	}
+	c.Cookie(&cookie)
+
+	response := models.Response{
+		Type: models.TypeAuthResponse,
+		Data: views.UserAuth{
+			AuthToken: token,
+			UserData: views.UserAuthData{
+				Name:          user.Name,
+				Phone:         user.Phone,
+				Country:       user.Country,
+				Status:        user.Status,
+				VerifiedPhone: user.VerifiedPhone,
+			},
+		},
+	}
+
+	return c.JSON(response)
+}
+
+func UserRequestOTP(c *fiber.Ctx) error {
+
+	userID := c.GetRespHeader("request_user_id")
+	OTP := otp.GenerateRandomNumber()
+
+	_, err := db.DB.Exec(`UPDATE users SET otp = $1 WHERE id = $2;`, OTP, userID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	// if !otp.SendOTP(OTP) {
+	// 	response := models.Response{
+	// 		Type: models.TypeErrorResponse,
+	// 		Data: views.Error{
+	// 			Error: "Something went wrong please try again",
+	// 		},
+	// 	}
+	// 	c.Status(400)
+	// 	return c.JSON(response)
+	// }
+
+	return c.SendString("Success")
+}
+
+func UserVerifyOTP(c *fiber.Ctx) error {
+
+	userID := c.GetRespHeader("request_user_id")
+
+	otpToken := models.OTP{}
+	err := c.BodyParser(&otpToken)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	userOTP := otpToken.OTPToken
+
+	var OTP string
+	query := db.DB.QueryRow(`SELECT otp FROM users WHERE id = $1;`, userID)
+	err = query.Scan(&OTP)
+	if err != nil {
+		response := models.Response{
+			Type: "error",
+			Data: views.Error{
+				Error: "something went wrong",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if userOTP != OTP {
+		response := models.Response{
+			Type: "invalid_otp",
+			Data: views.Error{
+				Error: "invalid otp",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	_, err = db.DB.Exec(`UPDATE users SET verified_phone = $1 WHERE id = $2;`, true, userID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	return c.SendString("Success")
+}
+
+func UserResetPasswordRequest(c *fiber.Ctx) error {
+
+	phoneNumber := models.PhoneNumber{}
+	err := c.BodyParser(&phoneNumber)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	OTP := otp.GenerateRandomNumber()
+
+	_, err = db.DB.Exec(`UPDATE users SET otp = $1 WHERE phone = $2;`, OTP, phoneNumber.Phone)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	// if !otp.SendOTP(OTP) {
+	// 	response := models.Response{
+	// 		Type: models.TypeErrorResponse,
+	// 		Data: views.Error{
+	// 			Error: "Something went wrong please try again",
+	// 		},
+	// 	}
+	// 	c.Status(400)
+	// 	return c.JSON(response)
+	// }
+
+	return c.SendString("Success")
+}
+
+func UserResetPassword(c *fiber.Ctx) error {
+
+	otpAndPhone := models.OTPAndPhoneAndPassword{}
+
+	err := c.BodyParser(&otpAndPhone)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	var OTP string
+	query := db.DB.QueryRow(`SELECT otp FROM users WHERE phone = $1;`, otpAndPhone.Phone)
+	err = query.Scan(&OTP)
+	if err != nil {
+		response := models.Response{
+			Type: "error",
+			Data: views.Error{
+				Error: "something went wrong",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if otpAndPhone.OTPToken != OTP {
+		response := models.Response{
+			Type: "invalid_otp",
+			Data: views.Error{
+				Error: "invalid otp",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	OTP = otp.GenerateRandomNumber()
+	newPass, _ := HashPassword(otpAndPhone.Password)
+
+	_, err = db.DB.Exec(`UPDATE users SET otp = $1, password = $2 WHERE phone = $3;`, OTP, newPass, otpAndPhone.Phone)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	return c.SendString("success")
+
 }

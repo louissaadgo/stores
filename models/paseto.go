@@ -9,3 +9,7 @@ type PasetoTokenPayload struct {
 	IssuedAt  time.Time `json:"issued_at"`
 	ExpiresAt time.Time `json:"expires_at"`
 }
+
+type Token struct {
+	Token string `json:"token"`
+}
