@@ -417,7 +417,7 @@ func UserSignup(c *fiber.Ctx) error {
 	query := db.DB.QueryRow(`SELECT phone, verified_phone FROM users WHERE phone = $1;`, user.Phone)
 	err = query.Scan(&user.Phone, &verifiedPhone)
 
-	if (err == nil || err != sql.ErrNoRows) && verifiedPhone {
+	if err == nil || err != sql.ErrNoRows {
 		response := models.Response{
 			Type: "phone_already_registered",
 			Data: views.Error{
@@ -440,6 +440,19 @@ func UserSignup(c *fiber.Ctx) error {
 
 	_, err = db.DB.Exec(`INSERT INTO users(name, phone, image, verified_phone, otp, password, token_id, country, status, created_at, updated_at)
 	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`, user.Name, user.Phone, "", user.VerifiedPhone, user.OTP, user.Password, tokenID, user.Country, user.Status, user.CreatedAt, user.UpdatedAt)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Error occured while inserting into db",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	oneRow := db.DB.QueryRow(`SELECT id FROM users WHERE phone = $1;`, user.Phone)
+	err = oneRow.Scan(&user.ID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -622,24 +635,14 @@ func UserVerifyOTP(c *fiber.Ctx) error {
 
 	userID := c.GetRespHeader("request_user_id")
 
-	otpToken := models.OTP{}
-	err := c.BodyParser(&otpToken)
-	if err != nil {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Invalid Data Types",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
+	testOTP := c.Params("otp")
 
-	userOTP := otpToken.OTPToken
+	otpToken := models.OTP{}
+	otpToken.OTPToken = testOTP
 
 	var OTP string
 	query := db.DB.QueryRow(`SELECT otp FROM users WHERE id = $1;`, userID)
-	err = query.Scan(&OTP)
+	err := query.Scan(&OTP)
 	if err != nil {
 		response := models.Response{
 			Type: "error",
@@ -651,7 +654,7 @@ func UserVerifyOTP(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if userOTP != OTP {
+	if otpToken.OTPToken != OTP {
 		response := models.Response{
 			Type: "invalid_otp",
 			Data: views.Error{
@@ -821,4 +824,47 @@ func UserAddPictureAndName(c *fiber.Ctx) error {
 	}
 
 	return c.SendString("success")
+}
+
+func UserVerifyOTPForPassword(c *fiber.Ctx) error {
+
+	otpToken := models.OTPWithPhone{}
+	err := c.BodyParser(&otpToken)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	var OTP string
+	query := db.DB.QueryRow(`SELECT otp FROM users WHERE phone = $1;`, otpToken.Phone)
+	err = query.Scan(&OTP)
+	if err != nil {
+		response := models.Response{
+			Type: "error",
+			Data: views.Error{
+				Error: "something went wrong",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	if otpToken.OTPToken != OTP {
+		response := models.Response{
+			Type: "invalid_otp",
+			Data: views.Error{
+				Error: "invalid otp",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	return c.SendString("Success")
 }

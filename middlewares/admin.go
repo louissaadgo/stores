@@ -13,12 +13,12 @@ import (
 func AdminMiddleware(c *fiber.Ctx) error {
 
 	tokenString := models.Token{}
-	err := c.BodyParser(&tokenString.Token)
+	err := c.BodyParser(&tokenString)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Invalid Data Types",
+				Error: err.Error(),
 			},
 		}
 		c.Status(400)
@@ -36,6 +36,7 @@ func AdminMiddleware(c *fiber.Ctx) error {
 		c.Status(400)
 		return c.JSON(response)
 	}
+
 	if payload.UserType != models.TypeAdmin {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -47,15 +48,15 @@ func AdminMiddleware(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	query := db.DB.QueryRow(`SELECT id, token_id FROM admins WHERE id = $1;`, payload.UserID)
+	query := db.DB.QueryRow(`SELECT token_id FROM admins WHERE id = $1;`, payload.UserID)
 	var tokenID string
-	err = query.Scan(&payload.UserID, &tokenID)
+	err = query.Scan(&tokenID)
 
-	if err != nil || tokenID != payload.ID {
+	if tokenID != payload.ID {
 		response := models.Response{
-			Type: models.TypeErrorResponse,
+			Type: "error",
 			Data: views.Error{
-				Error: err.Error(),
+				Error: "invalid token",
 			},
 		}
 		c.Status(400)

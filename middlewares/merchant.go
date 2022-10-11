@@ -13,7 +13,7 @@ import (
 func MerchantMiddleware(c *fiber.Ctx) error {
 
 	tokenString := models.Token{}
-	err := c.BodyParser(&tokenString.Token)
+	err := c.BodyParser(&tokenString)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,

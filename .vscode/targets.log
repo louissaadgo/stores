@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Oct 11 08:37:39 2022
+# Make data base, printed on Tue Oct 11 12:51:17 2022
 
 # Variables
 
@@ -51,7 +49,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:46529
+JOURNAL_STREAM = 8:46509
 # environment
 DB_CONNECTION = postgres://postgres:2400@localhost/zealouss?sslmode=disable
 # environment
@@ -81,7 +79,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 INFOPATH = /home/linuxbrew/.linuxbrew/share/info:
 # environment
-MANAGERPID = 1420
+MANAGERPID = 1416
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -103,7 +101,7 @@ PASETO_KEY = 0123456789zealoussio012345678924
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/2012,unix/louisgo:/tmp/.ICE-unix/2012
+SESSION_MANAGER = local/louisgo:@/tmp/.ICE-unix/2018,unix/louisgo:/tmp/.ICE-unix/2018
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -119,7 +117,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = eb18576549fb40cfa8ffb08ff76d8d7a
+INVOCATION_ID = a8c16d8ff4ef454f8d24896e15e0ec79
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/109/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -145,7 +143,7 @@ QT_QPA_PLATFORMTHEME = gtk3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1947
+SSH_AGENT_PID = 1961
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = zorin:GNOME
 # environment
@@ -279,13 +277,15 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/24f66e8d_6a02_4fa8_8676_f58b1433cb7d
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/4684a56e_71aa_4b2a_b9cb_415c870f5966
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.333
+GNOME_TERMINAL_SERVICE = :1.93
 # default
  
+make: *** No rule to make target 'all'.  Stop.
+
 SUFFIXES := 
 # environment
 STRIPE_SECRET_KEY = sk_test_51JU9B9IOhitPdg1zeXYUWLi3h4jBo2HwL85MvvqDwCX8iqtEkHg8SzYm5yl7PJktV03fAKp7lDAH2A8vgiKrbLHA00buopowXv
@@ -310,7 +310,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 9274
+VSCODE_PID = 5317
 # variable set hash-table stats:
 # Load=149/1024=15%, Rehash=0, Collisions=22/174=13%
 
@@ -320,9 +320,9 @@ VSCODE_PID = 9274
 
 # Directories
 
-# . (device 2050, inode 13635890): 19 files, no impossibilities.
+# . (device 2050, inode 13635890): 20 files, no impossibilities.
 
-# 19 files, no impossibilities in 1 directories.
+# 20 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -365,12 +365,12 @@ run:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 25 / storage = 190 B / avg = 7 B
-# current buf: size = 8162 B / used = 190 B / count = 25 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 26 / storage = 198 B / avg = 7 B
+# current buf: size = 8162 B / used = 198 B / count = 26 / avg = 7 B
 
-# strcache performance: lookups = 30 / hit rate = 16%
+# strcache performance: lookups = 31 / hit rate = 16%
 # hash-table stats:
-# Load=25/8192=0%, Rehash=0, Collisions=1/30=3%
-# Finished Make data base on Tue Oct 11 08:37:39 2022
+# Load=26/8192=0%, Rehash=0, Collisions=1/31=3%
+# Finished Make data base on Tue Oct 11 12:51:17 2022
 
  

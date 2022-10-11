@@ -1,7 +1,13 @@
 package models
 
 type OTP struct {
+	OTPToken string `json:"test"`
+	Message  string `json:"message"`
+}
+
+type OTPWithPhone struct {
 	OTPToken string `json:"otp"`
+	Phone    string `json:"phone"`
 }
 
 type PhoneNumber struct {

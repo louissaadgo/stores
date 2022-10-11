@@ -20,6 +20,7 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
 	app.Post("/api/v1/auth/user/reset/password/request", controllers.UserResetPasswordRequest)
 	app.Post("/api/v1/auth/user/reset/password", controllers.UserResetPassword)
+	app.Post("/api/v1/auth/user/reset/password/verify/otp", controllers.UserVerifyOTPForPassword)
 
 	app.Get("/api/v1/categories", controllers.GetAllCategories)
 	app.Get("/api/v1/currencies", controllers.GetAllCurrencies)
@@ -29,7 +30,7 @@ func Initialize(app *fiber.App) {
 	//User specific routes
 	app.Use("/api/v1/user/", middlewares.UserMiddleware)
 	app.Post("/api/v1/user/request/otp", controllers.UserRequestOTP)
-	app.Post("/api/v1/user/verify/otp", controllers.UserVerifyOTP)
+	app.Post("/api/v1/user/verify/otp/:otp", controllers.UserVerifyOTP)
 	app.Post("/api/v1/user/add/nameandimage", controllers.UserAddPictureAndName)
 
 	// app.Post("/api/v1/user/addresses", controllers.CreateAddress)

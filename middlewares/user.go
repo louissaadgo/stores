@@ -13,7 +13,7 @@ import (
 func UserMiddleware(c *fiber.Ctx) error {
 
 	tokenString := models.Token{}
-	err := c.BodyParser(&tokenString.Token)
+	err := c.BodyParser(&tokenString)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -30,7 +30,7 @@ func UserMiddleware(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Unauthorized",
+				Error: "Invalid Paseto",
 			},
 		}
 		c.Status(400)
@@ -40,7 +40,7 @@ func UserMiddleware(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
 			Data: views.Error{
-				Error: "Unauthorized",
+				Error: "Invalid user type",
 			},
 		}
 		c.Status(400)
