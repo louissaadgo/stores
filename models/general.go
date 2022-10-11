@@ -13,3 +13,8 @@ type OTPAndPhoneAndPassword struct {
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
 }
+
+type UserImageAndName struct {
+	Image string `json:"image"`
+	Name  string `json:"name"`
+}

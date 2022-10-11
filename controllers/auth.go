@@ -3,10 +3,11 @@ package controllers
 import (
 	"database/sql"
 	"fmt"
+	"stores/core"
 	"stores/db"
-	"stores/emailing"
+
 	"stores/models"
-	"stores/otp"
+
 	"stores/token"
 	"stores/views"
 	"time"
@@ -135,13 +136,14 @@ func WebSignup(c *fiber.Ctx) error {
 	response := models.Response{
 		Type: models.TypeAuthResponse,
 		Data: views.AuthWeb{
-			AuthToken: token,
+			AuthToken:  token,
+			ExpiryDate: time.Now().Add(time.Hour * 2),
 		},
 	}
 
 	subject := fmt.Sprintf("Welcome %v", merchant.Name)
 	message := fmt.Sprintf("Welcome to Aswak, %v.\nYou have been successfully registered as a merchant.", merchant.Name)
-	go emailing.SendEmail(merchant.Email, subject, message)
+	go core.SendEmail(merchant.Email, subject, message)
 
 	return c.JSON(response)
 }
@@ -365,7 +367,8 @@ func WebLogin(c *fiber.Ctx) error {
 		response := models.Response{
 			Type: models.TypeAuthResponse,
 			Data: views.AuthWeb{
-				AuthToken: token,
+				AuthToken:  token,
+				ExpiryDate: time.Now().Add(time.Hour * 2),
 			},
 		}
 
@@ -435,8 +438,8 @@ func UserSignup(c *fiber.Ctx) error {
 
 	tokenID := uuid.New().String()
 
-	_, err = db.DB.Exec(`INSERT INTO users(name, phone, verified_phone, otp, password, token_id, country, status, created_at, updated_at)
-	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`, user.Name, user.Phone, user.VerifiedPhone, user.OTP, user.Password, tokenID, user.Country, user.Status, user.CreatedAt, user.UpdatedAt)
+	_, err = db.DB.Exec(`INSERT INTO users(name, phone, image, verified_phone, otp, password, token_id, country, status, created_at, updated_at)
+	VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`, user.Name, user.Phone, "", user.VerifiedPhone, user.OTP, user.Password, tokenID, user.Country, user.Status, user.CreatedAt, user.UpdatedAt)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -587,7 +590,7 @@ func UserSignin(c *fiber.Ctx) error {
 func UserRequestOTP(c *fiber.Ctx) error {
 
 	userID := c.GetRespHeader("request_user_id")
-	OTP := otp.GenerateRandomNumber()
+	OTP := core.GenerateRandomNumber()
 
 	_, err := db.DB.Exec(`UPDATE users SET otp = $1 WHERE id = $2;`, OTP, userID)
 	if err != nil {
@@ -689,7 +692,7 @@ func UserResetPasswordRequest(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	OTP := otp.GenerateRandomNumber()
+	OTP := core.GenerateRandomNumber()
 
 	_, err = db.DB.Exec(`UPDATE users SET otp = $1 WHERE phone = $2;`, OTP, phoneNumber.Phone)
 	if err != nil {
@@ -758,7 +761,7 @@ func UserResetPassword(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	OTP = otp.GenerateRandomNumber()
+	OTP = core.GenerateRandomNumber()
 	newPass, _ := HashPassword(otpAndPhone.Password)
 
 	_, err = db.DB.Exec(`UPDATE users SET otp = $1, password = $2 WHERE phone = $3;`, OTP, newPass, otpAndPhone.Phone)
@@ -775,4 +778,47 @@ func UserResetPassword(c *fiber.Ctx) error {
 
 	return c.SendString("success")
 
+}
+
+func UserAddPictureAndName(c *fiber.Ctx) error {
+	userID := c.GetRespHeader("request_user_id")
+
+	user := models.UserImageAndName{}
+	err := c.BodyParser(&user)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Invalid Data Types",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	err, url := core.SaveImage(userID, user.Image)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: err.Error(),
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	_, err = db.DB.Exec(`UPDATE users SET name = $1, image = $2 WHERE id = $3;`, user.Name, url, userID)
+	if err != nil {
+		response := models.Response{
+			Type: models.TypeErrorResponse,
+			Data: views.Error{
+				Error: "Something went wrong please try again",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
+	return c.SendString("success")
 }

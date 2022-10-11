@@ -24,7 +24,7 @@ func GeneratePasetoToken(id string, userID int, userType string) (string, error)
 		UserID:    userID,
 		UserType:  userType,
 		IssuedAt:  time.Now(),
-		ExpiresAt: time.Now().Add(time.Hour * 24 * 7),
+		ExpiresAt: time.Now().Add(time.Hour * 2),
 	}
 
 	paseto := paseto.NewV2()

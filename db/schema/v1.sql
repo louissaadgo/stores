@@ -2,6 +2,7 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name varchar,
     phone varchar,
+    image varchar,
     verified_phone BOOLEAN,
     otp varchar,
     password varchar,

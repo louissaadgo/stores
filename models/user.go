@@ -10,6 +10,7 @@ type User struct {
 	ID            int       `json:"id"`
 	Name          string    `json:"name"`
 	Phone         string    `json:"phone"`
+	Image         string    `json:"image"`
 	VerifiedPhone bool      `json:"verified_phone"`
 	OTP           string    `json:"otp"`
 	Password      string    `json:"password"`

@@ -1,5 +1,7 @@
 package views
 
+import "time"
+
 type UserAuthData struct {
 	Name          string `json:"name"`
 	Phone         string `json:"phone"`
@@ -14,7 +16,8 @@ type UserAuth struct {
 }
 
 type AuthWeb struct {
-	AuthToken string `json:"auth_token"`
+	AuthToken  string    `json:"auth_token"`
+	ExpiryDate time.Time `json:"expiry_date"`
 }
 
 type CurrentTypeWeb struct {
