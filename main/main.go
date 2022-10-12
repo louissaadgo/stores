@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"os"
 	"stores/db"
 	"stores/routes"
 
@@ -10,7 +9,7 @@ import (
 )
 
 func main() {
-	os.Mkdir("storage", os.ModePerm)
+	// os.Mkdir("storage", os.ModePerm)
 
 	err, isValid := db.InitializeDB()
 	if !isValid {

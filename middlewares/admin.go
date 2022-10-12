@@ -12,18 +12,10 @@ import (
 
 func AdminMiddleware(c *fiber.Ctx) error {
 
+	tokenReq := string(c.Request().Header.Peek("token"))
+
 	tokenString := models.Token{}
-	err := c.BodyParser(&tokenString)
-	if err != nil {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: err.Error(),
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
+	tokenString.Token = tokenReq
 
 	payload, isValid := token.VerifyPasetoToken(tokenString.Token)
 	if !isValid {
@@ -50,7 +42,7 @@ func AdminMiddleware(c *fiber.Ctx) error {
 
 	query := db.DB.QueryRow(`SELECT token_id FROM admins WHERE id = $1;`, payload.UserID)
 	var tokenID string
-	err = query.Scan(&tokenID)
+	query.Scan(&tokenID)
 
 	if tokenID != payload.ID {
 		response := models.Response{

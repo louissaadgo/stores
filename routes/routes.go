@@ -19,8 +19,8 @@ func Initialize(app *fiber.App) {
 	app.Post("/api/v1/auth/user/signup", controllers.UserSignup)
 	app.Post("/api/v1/auth/user/signin", controllers.UserSignin)
 	app.Post("/api/v1/auth/user/reset/password/request", controllers.UserResetPasswordRequest)
-	app.Post("/api/v1/auth/user/reset/password", controllers.UserResetPassword)
-	app.Post("/api/v1/auth/user/reset/password/verify/otp", controllers.UserVerifyOTPForPassword)
+	app.Post("/api/v1/auth/user/reset/password/:otp", controllers.UserResetPassword)
+	app.Post("/api/v1/auth/user/reset/password/verify/otp/:otp", controllers.UserVerifyOTPForPassword)
 
 	app.Get("/api/v1/categories", controllers.GetAllCategories)
 	app.Get("/api/v1/currencies", controllers.GetAllCurrencies)

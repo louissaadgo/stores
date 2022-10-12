@@ -697,6 +697,19 @@ func UserResetPasswordRequest(c *fiber.Ctx) error {
 
 	OTP := core.GenerateRandomNumber()
 
+	query := db.DB.QueryRow(`SELECT phone FROM users WHERE phone = $1;`, phoneNumber.Phone)
+	err = query.Scan(&phoneNumber.Phone)
+	if err == sql.ErrNoRows {
+		response := models.Response{
+			Type: "Error",
+			Data: views.Error{
+				Error: "Phone not found",
+			},
+		}
+		c.Status(400)
+		return c.JSON(response)
+	}
+
 	_, err = db.DB.Exec(`UPDATE users SET otp = $1 WHERE phone = $2;`, OTP, phoneNumber.Phone)
 	if err != nil {
 		response := models.Response{
@@ -725,7 +738,10 @@ func UserResetPasswordRequest(c *fiber.Ctx) error {
 
 func UserResetPassword(c *fiber.Ctx) error {
 
+	testOTP := c.Params("otp")
+
 	otpAndPhone := models.OTPAndPhoneAndPassword{}
+	otpAndPhone.OTPToken = testOTP
 
 	err := c.BodyParser(&otpAndPhone)
 	if err != nil {
@@ -799,19 +815,7 @@ func UserAddPictureAndName(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	err, url := core.SaveImage(userID, user.Image)
-	if err != nil {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: err.Error(),
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
-
-	_, err = db.DB.Exec(`UPDATE users SET name = $1, image = $2 WHERE id = $3;`, user.Name, url, userID)
+	_, err = db.DB.Exec(`UPDATE users SET name = $1, image = $2 WHERE id = $3;`, user.Name, user.Image, userID)
 	if err != nil {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
@@ -823,23 +827,26 @@ func UserAddPictureAndName(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	return c.SendString("success")
+	return c.SendString("Success")
 }
 
 func UserVerifyOTPForPassword(c *fiber.Ctx) error {
+
+	testOTP := c.Params("otp")
 
 	otpToken := models.OTPWithPhone{}
 	err := c.BodyParser(&otpToken)
 	if err != nil {
 		response := models.Response{
-			Type: models.TypeErrorResponse,
+			Type: "error",
 			Data: views.Error{
-				Error: "Invalid Data Types",
+				Error: "something went wrong",
 			},
 		}
 		c.Status(400)
 		return c.JSON(response)
 	}
+	otpToken.OTPToken = testOTP
 
 	var OTP string
 	query := db.DB.QueryRow(`SELECT otp FROM users WHERE phone = $1;`, otpToken.Phone)

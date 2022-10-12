@@ -12,18 +12,10 @@ import (
 
 func MerchantMiddleware(c *fiber.Ctx) error {
 
+	tokenReq := string(c.Request().Header.Peek("token"))
+
 	tokenString := models.Token{}
-	err := c.BodyParser(&tokenString)
-	if err != nil {
-		response := models.Response{
-			Type: models.TypeErrorResponse,
-			Data: views.Error{
-				Error: "Invalid Data Types",
-			},
-		}
-		c.Status(400)
-		return c.JSON(response)
-	}
+	tokenString.Token = tokenReq
 
 	payload, isValid := token.VerifyPasetoToken(tokenString.Token)
 	if !isValid {
@@ -50,7 +42,7 @@ func MerchantMiddleware(c *fiber.Ctx) error {
 	query := db.DB.QueryRow(`SELECT id, status, token_id FROM merchants WHERE id = $1;`, payload.UserID)
 	var userStatus string
 	var tokenID string
-	err = query.Scan(&payload.UserID, &userStatus, &tokenID)
+	err := query.Scan(&payload.UserID, &userStatus, &tokenID)
 	if err != nil || tokenID != payload.ID {
 		response := models.Response{
 			Type: models.TypeErrorResponse,
